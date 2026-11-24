@@ -1,0 +1,17 @@
+{
+  "name": "smart-pack-ai",
+  "version": "2.0.0",
+  "description": "Smart Pack AI — Packhouse Intelligence Console",
+  "scripts": {
+    "dev": "npx -y serve app/frontend -l 3000",
+    "start": "npx -y serve app/frontend -l 3000"
+  },
+  "keywords": [
+    "packaging",
+    "foodtech",
+    "food-processing",
+    "barrier-engineering"
+  ],
+  "author": "",
+  "license": "MIT"
+}

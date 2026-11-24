@@ -1,0 +1,54 @@
+commodity,category,subcategory,moisture_pct,fat_pct,ph,respiration_rate_class,respiration_ml_co2_kg_hr,shelf_life_ambient_days,shelf_life_chilled_days,shelf_life_frozen_days,optimal_temp_c,optimal_rh_pct,ethylene_producer,ethylene_sensitive,storage_type_default,notes
+Tomato,Vegetables,Fruit Vegetable,94.5,0.2,4.2,Moderate,10,7,21,180,12,90,High,Moderate,chilled,Avoid storage with ethylene-sensitive produce
+Mango,Fruits,Tropical,83.0,0.4,3.9,Moderate,15,5,14,240,13,90,High,High,ambient,Ripens at room temp; cold storage post-ripening
+Banana,Fruits,Tropical,74.9,0.3,4.5,High,25,3,14,120,14,90,Very High,Very High,ambient,Very ethylene sensitive; store away from other fruits
+Apple,Fruits,Temperate,85.6,0.2,3.5,Low,5,30,120,360,0,90,Low,High,chilled,CA storage extends shelf life significantly
+Grapes,Fruits,Berry,81.0,0.2,3.5,Low,3,7,30,180,0,95,Low,High,chilled,Sulfur dioxide pads used in commercial packs
+Potato,Vegetables,Tuber,79.0,0.1,6.1,Very Low,2,60,120,365,4,95,Low,Low,ambient,Avoid light exposure; store in dark cool conditions
+Onion,Vegetables,Bulb,89.0,0.1,5.7,Very Low,2,90,180,365,0,65,Low,Low,ambient,Low humidity storage essential; prone to rotting if wet
+Garlic,Vegetables,Bulb,58.6,0.5,6.3,Very Low,2,120,180,365,0,65,Low,Low,ambient,Dry conditions essential; bulk in mesh or kraft bags
+Carrot,Vegetables,Root,88.3,0.2,6.0,Low,4,30,90,365,0,98,Low,Moderate,chilled,High humidity storage important
+Broccoli,Vegetables,Brassica,89.3,0.4,6.5,Very High,150,3,14,365,0,95,Low,High,chilled,Very high respiration; needs breathable or perforated packaging
+Spinach,Vegetables,Leafy Green,91.6,0.4,6.4,Very High,200,2,7,365,0,98,Low,High,chilled,Extremely perishable; MAP or perforated bags essential
+Lettuce,Vegetables,Leafy Green,95.1,0.2,6.2,High,80,3,10,365,0,98,Low,High,chilled,Modified atmosphere packaging significantly extends shelf life
+Mushroom,Vegetables,Fungus,92.4,0.3,6.5,Very High,250,2,7,365,0,95,Low,Low,chilled,Very high respiration; micro-perforated or high OTR films
+Capsicum,Vegetables,Fruit Vegetable,93.0,0.3,5.5,Moderate,20,7,21,180,10,90,Low,High,chilled,Chilling injury below 7 degrees C
+Cucumber,Vegetables,Fruit Vegetable,95.2,0.1,5.5,Low,15,5,14,180,12,95,Low,High,chilled,Chilling injury below 10 degrees C; avoid co-storage with ethylene producers
+Eggplant,Vegetables,Fruit Vegetable,92.0,0.2,5.8,Moderate,15,5,14,180,10,90,Low,High,chilled,Moderate respiration; good barrier packaging recommended
+Cauliflower,Vegetables,Brassica,92.1,0.3,6.5,High,80,3,14,365,0,95,Low,High,chilled,High respiration similar to broccoli
+Green Peas,Vegetables,Legume,78.9,0.4,6.1,Very High,150,2,7,365,0,95,Low,Low,chilled,Very perishable after harvest; freeze quickly
+Sweet Corn,Vegetables,Cereal,76.0,1.2,6.5,High,100,1,5,365,0,90,Low,Low,chilled,Very rapid quality loss; freeze or MAP recommended
+Strawberry,Fruits,Berry,90.9,0.3,3.4,High,50,2,7,365,0,95,Low,High,chilled,Very delicate; MAP with CO2 reduces mold
+Muskmelon,Fruits,Melons,90.2,0.2,6.5,Moderate,10,5,14,120,7,85,High,Moderate,ambient,Ethylene producer; separate from sensitive items
+Watermelon,Fruits,Melons,91.5,0.2,5.2,Very Low,3,14,28,180,10,90,Low,High,ambient,Large size reduces cost-benefit of sealed packaging
+Papaya,Fruits,Tropical,88.8,0.3,5.2,Moderate,15,4,14,240,13,90,High,High,ambient,Very ethylene sensitive; handle gently
+Guava,Fruits,Tropical,81.0,0.5,4.0,High,40,3,7,180,8,90,High,High,chilled,High respiration; MAP or breathable packaging
+Pomegranate,Fruits,Tropical,78.0,1.2,3.7,Very Low,3,30,90,365,5,90,Low,Low,chilled,Long shelf life with good packaging
+Pineapple,Fruits,Tropical,86.0,0.1,3.7,Low,5,5,21,180,13,85,Low,Moderate,ambient,Chilling injury below 10 degrees C
+Citrus Orange,Fruits,Citrus,86.8,0.2,3.8,Low,4,14,60,365,5,90,Low,Low,chilled,Wax coating used commercially for shelf life extension
+Lemon,Fruits,Citrus,89.0,0.3,2.2,Low,3,14,60,365,5,90,Low,Low,chilled,High acidity provides natural preservation
+Fresh Milk,Dairy,Liquid,88.0,3.5,6.7,NA,0,1,14,90,4,NA,No,No,chilled,UHT treatment extends to 90 days; pasteurized is 14 days
+Paneer,Dairy,Solid,52.0,20.0,6.5,NA,0,2,7,90,4,NA,No,No,chilled,Vacuum packaging extends shelf life significantly
+Yogurt,Dairy,Fermented,85.0,3.5,4.2,NA,0,10,21,90,4,NA,No,No,chilled,Active cultures; semi-permeable barrier needed
+Cheese,Dairy,Solid,40.0,30.0,5.5,NA,0,60,180,365,4,NA,No,No,chilled,Vacuum or MAP packaging essential; CO2 inhibits mold
+Chicken Meat,Meat and Poultry,Poultry,75.0,5.0,6.2,NA,0,1,7,365,2,NA,No,No,chilled,MAP with CO2+N2; high sanitation requirement
+Fish,Seafood,Marine,80.0,2.0,6.7,NA,0,1,3,365,0,NA,No,No,chilled,Very perishable; vacuum or MAP essential; ice glazing for frozen
+Shrimp,Seafood,Shellfish,76.0,1.1,7.0,NA,0,1,5,365,0,NA,No,No,chilled,Highly perishable; MAP or freezing recommended
+Rice (Raw),Grains,Cereal,12.0,1.0,6.5,NA,0,365,730,1825,25,60,No,No,ambient,Low moisture dry product; moisture barrier primary concern
+Wheat Flour,Grains,Flour,12.5,1.5,6.2,NA,0,180,365,730,25,65,No,No,ambient,Moisture and insect exclusion critical
+Dal Lentils,Pulses,Legume,12.0,1.0,6.5,NA,0,365,730,1825,25,65,No,No,ambient,Dry storage; moisture and pest control
+Groundnuts,Oil Seeds,Nuts,5.0,48.0,6.2,NA,0,90,180,730,25,65,No,No,ambient,High fat content; oxygen barrier critical for rancidity prevention
+Cashews,Tree Nuts,Nuts,5.5,42.0,6.5,NA,0,60,180,365,25,65,No,No,ambient,Oxygen and moisture barrier; nitrogen flush recommended
+Almonds,Tree Nuts,Nuts,4.7,50.0,6.5,NA,0,90,180,730,25,65,No,No,ambient,Similar to cashews; high fat oxidation risk
+Spices (Ground),Spices,Powder,10.0,5.0,6.0,NA,0,180,365,730,25,65,No,No,ambient,Moisture and oxygen barriers critical; aroma retention important
+Coffee Beans,Beverages,Roasted,3.0,15.0,5.5,NA,0,60,180,365,25,60,Yes,No,ambient,Degassing valve needed; high CO2 emission post-roasting
+Tea Leaves,Beverages,Dried,5.0,1.0,6.5,NA,0,365,730,1825,25,60,No,No,ambient,Light and moisture barrier critical for aroma preservation
+Bread,Bakery,Baked,37.0,3.0,5.8,NA,0,3,7,90,25,NA,No,No,ambient,Moisture retention and mold prevention; breathable or perforated
+Biscuits,Bakery,Dry Baked,4.0,15.0,6.5,NA,0,90,180,365,25,65,No,No,ambient,Critical moisture barrier; avoid humid storage
+Chips Snacks,Snacks,Fried,1.5,35.0,6.0,NA,0,60,120,365,25,65,No,No,ambient,High fat; oxygen barrier critical; nitrogen flushing standard
+Honey,Sweeteners,Natural,17.0,0.0,3.9,NA,0,730,1460,2920,25,60,No,No,ambient,Hygroscopic; moisture-proof seal essential; antimicrobial natural pH
+Jaggery,Sweeteners,Natural,5.0,0.0,5.5,NA,0,180,365,730,25,60,No,No,ambient,Moisture absorption is primary concern
+Tomato Puree,Processed,Paste,90.0,0.5,4.2,NA,0,7,30,365,4,NA,No,No,chilled,Acidic; retort or aseptic packaging for ambient storage
+Fruit Juice,Beverages,Liquid,88.0,0.2,3.8,NA,0,3,21,365,4,NA,No,No,chilled,Aseptic or pasteurized; oxygen exclusion critical
+Pickle,Processed,Fermented,70.0,0.5,3.5,NA,0,180,365,730,25,NA,No,No,ambient,High salt and acid content provides preservation
+Panipuri Puri,Snacks,Fried Snack,2.0,20.0,6.0,NA,0,30,90,365,25,65,No,No,ambient,Very low moisture dry fried product; moisture barrier key
