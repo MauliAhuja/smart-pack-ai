@@ -17,17 +17,17 @@ async function fetchJSON(url, opts = {}, ms = 1500) {
 }
 
 const PAGE = {
-  dashboard: { title: "Overview & Analytics", sub: "Packhouse decision support & food waste analytics" },
-  recommend: { title: "New spec", sub: "Commodity, climate, mill constraints" },
-  results: { title: "Dossier", sub: "Barrier, MAP, shelf life, cost, QR" },
-  history: { title: "Recommendation history", sub: "Saved company dossiers & performance logs" },
-  history_compare: { title: "Compare past specs", sub: "Side-by-side evaluation of historical dossiers" },
-  compare: { title: "Compare materials", sub: "Side-by-side technical evaluation" },
-  calculator: { title: "Pack calculator", sub: "Film surface area, weight & batch economics" },
-  verifier: { title: "Lot verifier", sub: "Authenticate QR lot identity & dossier" },
-  materials: { title: "Materials mill & Admin", sub: "Stock-keeping films, database administration" },
-  commodities: { title: "Commodity ledger", sub: "Moisture, pH, respiration, product profiles" },
-  about: { title: "Documentation", sub: "System architecture, standards & engine mechanics" },
+  dashboard: { title: "Overview", sub: "Your packaging plans and saved results" },
+  recommend: { title: "New recommendation", sub: "Tell us about your product and its journey" },
+  results: { title: "Your packaging plan", sub: "Suggestions, freshness, cost, and storage tips" },
+  history: { title: "Saved recommendations", sub: "Find and reopen earlier plans" },
+  history_compare: { title: "Compare past reports", sub: "See how earlier choices differ" },
+  compare: { title: "Compare materials", sub: "Review protection, cost, and eco options" },
+  calculator: { title: "Pack calculator", sub: "Estimate packaging for your batch" },
+  verifier: { title: "Check a batch", sub: "Look up a saved packaging plan" },
+  materials: { title: "Packaging materials", sub: "Browse and update your options" },
+  commodities: { title: "Product list", sub: "Browse and update product details" },
+  about: { title: "How it helps", sub: "A simple guide to your packaging results" },
 };
 
 let currentCompany = localStorage.getItem("spa-company") || "GreenField Packhouses Ltd.";
@@ -187,12 +187,13 @@ function autofill(data) {
   const shelfKey = "shelf_life_" + st + "_days";
   if (data[shelfKey] != null && String(data[shelfKey]) !== "nan") {
     $("inp-shelf-life").value = data[shelfKey];
-    $("hint-shelf").textContent = "ledger: " + data[shelfKey] + " d";
+    $("hint-shelf").textContent = "Usual for this product: " + data[shelfKey] + " days";
   }
   const note = $("autofill-note");
   note.style.display = "flex";
-  note.textContent = "Ledger filled for " + (data.commodity || nameSafe(data));
+  note.textContent = "Product details filled in for " + (data.commodity || nameSafe(data));
   renderProfile(data);
+  updateLivePackPreview();
 }
 
 function nameSafe(d) { return d.commodity || d.name || ""; }
@@ -200,18 +201,18 @@ function nameSafe(d) { return d.commodity || d.name || ""; }
 function renderProfile(data) {
   $("profile-panel").style.display = "block";
   const rows = [
-    ["Moisture", data.moisture_pct != null ? data.moisture_pct + "%" : "—"],
-    ["Fat", data.fat_pct != null ? data.fat_pct + "%" : "—"],
-    ["pH", data.ph != null && String(data.ph) !== "nan" ? data.ph : "—"],
-    ["Respiration", data.respiration_rate_class || "—"],
-    ["Optimum T", data.optimal_temp_c != null ? data.optimal_temp_c + "°C" : "—"],
-    ["Optimum RH", data.optimal_rh_pct != null ? data.optimal_rh_pct + "%" : "—"],
-    ["Ethylene out", data.ethylene_producer || "—"],
-    ["Ethylene in", data.ethylene_sensitive || "—"],
+    ["Water content", data.moisture_pct != null ? data.moisture_pct + "%" : "—"],
+    ["Fat or oil", data.fat_pct != null ? data.fat_pct + "%" : "—"],
+    ["Acidity", data.ph != null && String(data.ph) !== "nan" ? data.ph : "—"],
+    ["Uses oxygen", simpleRespiration(data.respiration_rate_class)],
+    ["Best temperature", data.optimal_temp_c != null ? data.optimal_temp_c + "°C" : "—"],
+    ["Best air moisture", data.optimal_rh_pct != null ? data.optimal_rh_pct + "%" : "—"],
+    ["Makes ripening gas", data.ethylene_producer || "—"],
+    ["Sensitive to ripening gas", data.ethylene_sensitive || "—"],
   ];
   $("profile-body").innerHTML = rows.map(([k, v]) =>
     `<div class="profile-row"><span>${k}</span><b>${v}</b></div>`
-  ).join("") + (data.notes ? `<p class="muted" style="margin-top:10px">${data.notes}</p>` : "");
+  ).join("") + (data.notes ? `<p class="muted" style="margin-top:10px">${plainProductNote(data.notes)}</p>` : "");
 }
 
 const DEMOS = [
@@ -247,12 +248,13 @@ async function runDemo(name, storage) {
   }
   const radio = document.querySelector(`input[name=storage_type][value="${storage}"]`);
   if (radio) radio.checked = true;
+  updateLivePackPreview();
   setTimeout(runRecommendation, 400);
 }
 
 async function runRecommendation() {
   const commodity = $("inp-commodity").value.trim();
-  if (!commodity) { alert("Enter a commodity name."); return; }
+  if (!commodity) { alert("Enter a product name."); return; }
   const payload = payloadFromForm();
   showLoad();
   try {
@@ -263,7 +265,7 @@ async function runRecommendation() {
     // Gemini can take longer on a cold request; give its explanation time to return.
     }, 90000);
     hideLoad();
-    if (!data.success) { alert(data.error || "Engine error"); return; }
+    if (!data.success) { alert(data.error || "We couldn’t make a recommendation. Please try again."); return; }
     finishResults(data, commodity);
   } catch (_) {
     hideLoad();
@@ -329,13 +331,13 @@ function renderAIExplanation(data) {
 
   const engine = data.engine || "unknown";
   const geminiReview = data.gemini_review;
-  let explanation = data.ai_explanation || "";
+  let explanation = "We compared your product and travel details with the available packaging choices. Here is the closest fit we found.";
   if (geminiReview) {
     explanation = [
-      geminiReview.recommendation && `What to choose: ${geminiReview.recommendation}`,
-      geminiReview.why_it_fits && `Why it fits: ${geminiReview.why_it_fits}`,
-      geminiReview.tradeoff && `Trade-off: ${geminiReview.tradeoff}`,
-      geminiReview.assumptions && `Assumptions: ${geminiReview.assumptions}`,
+      geminiReview.recommendation && `What we suggest: ${geminiReview.recommendation}`,
+      geminiReview.why_it_fits && `Why it may suit your product: ${geminiReview.why_it_fits}`,
+      geminiReview.tradeoff && `Things to consider: ${geminiReview.tradeoff}`,
+      geminiReview.assumptions && `What we don’t know yet: ${geminiReview.assumptions}`,
     ].filter(Boolean).join("\n\n");
   }
 
@@ -343,21 +345,21 @@ function renderAIExplanation(data) {
     textEl.textContent = explanation;
     panel.style.display = "block";
   } else {
-    textEl.textContent = "AI explanation not available for this recommendation.";
+    textEl.textContent = "A simple explanation will appear here with your recommendation.";
     panel.style.display = "block";
   }
 
   if (engine.includes("gemini")) {
-    tagEl.textContent = "GEMINI EXPLANATION + LOCAL ML";
+    tagEl.textContent = "Explained with Gemini";
     tagEl.className = "tag eco";
   } else if (engine.includes("local-tfidf")) {
-    tagEl.textContent = "LOCAL ML MODEL";
+    tagEl.textContent = "Quick recommendation";
     tagEl.className = "tag eco";
   } else if (engine.includes("rule") || engine.includes("fallback")) {
-    tagEl.textContent = "RULE ENGINE";
+    tagEl.textContent = "Quick recommendation";
     tagEl.className = "tag";
   } else {
-    tagEl.textContent = "AI ENGINE";
+    tagEl.textContent = "Your recommendation";
     tagEl.className = "tag eco";
   }
 }
@@ -365,46 +367,62 @@ function renderAIExplanation(data) {
 function renderWhy(data) {
   const s = data.specs || {};
   const items = [
-    ["Moisture class", s.moisture_class],
-    ["Respiration", s.respiration_class],
-    ["pH class", s.ph_class],
-    ["Fat class", s.fat_class],
-    ["Gas path", s.gas_permeability],
-    ["MAP", s.map_suitability],
+    ["Water content", s.moisture_class],
+    ["How quickly it uses oxygen", simpleRespiration(s.respiration_class)],
+    ["Acidity", s.ph_class],
+    ["Fat or oil", s.fat_class],
+    ["Air flow through pack", simpleGasFlow(s.gas_permeability)],
+    ["Protective gas mix", simpleGasMix(s.map_suitability)],
   ];
   $("why-grid").innerHTML = items.map(([k, v]) =>
     `<div class="spec"><div class="k">${k}</div><div class="v" style="font-size:16px">${v || "—"}</div></div>`
   ).join("");
 }
 
+function simpleRespiration(value) {
+  return ({ "Very High": "Very fast", High: "Fast", Moderate: "Medium", Low: "Slow", NA: "Not needed" })[value] || value || "—";
+}
+
+function simpleGasFlow(value) {
+  if (!value) return "—";
+  return value.toLowerCase().includes("high") ? "Lets more air through" : "Keeps more air out";
+}
+
+function simpleGasMix(value) {
+  if (!value) return "—";
+  if (value === "Recommended") return "Could help";
+  if (value === "Optional") return "Optional";
+  return value;
+}
+
 function renderRecs(recs) {
   if (!recs.length) {
-    $("rec-grid").innerHTML = "<p class='muted'>No mill match.</p>";
+    $("rec-grid").innerHTML = "<p class='muted'>No close match found. Try changing your preferences.</p>";
     return;
   }
   $("rec-grid").innerHTML = recs.map((rec, i) => {
     const tags = [];
     if (rec.biodegradable === "Yes") tags.push('<span class="tag eco">Compostable</span>');
     if (rec.recyclable === "Yes") tags.push('<span class="tag eco">Recyclable</span>');
-    if (rec.map_compatible === "Yes") tags.push('<span class="tag map">MAP</span>');
+    if (rec.map_compatible === "Yes") tags.push('<span class="tag map">Gas filling</span>');
     if (rec.heat_sealable === "Yes") tags.push('<span class="tag">Heat seal</span>');
-    if (rec.uv_barrier === "Yes") tags.push('<span class="tag">UV</span>');
+    if (rec.uv_barrier === "Yes") tags.push('<span class="tag">Light protection</span>');
     tags.push(`<span class="tag">${rec.cost_tier} cost</span>`);
     const um = rec.recommended_thickness?.recommended_um;
     return `<article class="rec ${i === 0 ? "best" : ""}">
-      <div class="rank">${i === 0 ? "TOP LOT" : "ALT " + i}</div>
+      <div class="rank">${i === 0 ? "BEST MATCH" : "OPTION " + i}</div>
       <h5>${rec.name}</h5>
       <div class="aka">${rec.short_name} · ${rec.category}</div>
-      <div class="flex between"><span class="muted">Match</span><b>${rec.match_pct}%</b></div>
+      <div class="flex between"><span class="muted">Fit score</span><b>${rec.match_pct}%</b></div>
       <div class="bar"><i data-w="${rec.match_pct}"></i></div>
       <div class="specs-mini">
-        <div><b>OTR</b><span>${rec.otr_range}</span></div>
-        <div><b>WVTR</b><span>${rec.wvtr_range}</span></div>
-        <div><b>CO₂TR</b><span>${rec.co2_range || "—"}</span></div>
-        <div><b>Gauge</b><span>${um ? um + " µm" : rec.thickness_range}</span></div>
+        <div title="How easily oxygen passes through"><b>Air flow</b><span>${rec.otr_range}</span></div>
+        <div title="How easily moisture passes through"><b>Moisture flow</b><span>${rec.wvtr_range}</span></div>
+        <div title="How easily carbon dioxide passes through"><b>CO₂ flow</b><span>${rec.co2_range || "—"}</span></div>
+        <div><b>Thickness</b><span>${um ? um + " µm" : rec.thickness_range}</span></div>
       </div>
-      ${rec.justification ? `<div class="callout info" style="margin-bottom:10px"><b>AI Justification:</b> ${rec.justification}</div>` : ""}
-      <p class="muted" style="margin-bottom:10px">${rec.description || ""}</p>
+      ${rec.justification ? `<div class="callout info" style="margin-bottom:10px"><b>Why this may fit:</b> ${rec.justification}</div>` : ""}
+      <p class="muted" style="margin-bottom:10px">${simpleMaterialDescription(rec.description || "")}</p>
       <div class="tags">${tags.join("")}</div>
     </article>`;
   }).join("");
@@ -415,11 +433,11 @@ function renderRecs(recs) {
 
 function renderEcoAlts(list) {
   if (!list.length) {
-    $("eco-alts").innerHTML = "<p class='muted'>Top picks already cover recyclable or compostable stock.</p>";
+    $("eco-alts").innerHTML = "<p class='muted'>Your top choices already include recyclable or compostable options.</p>";
     return;
   }
   $("eco-alts").innerHTML = `<div class="pills">${list.slice(0, 6).map((m) =>
-    `<span class="pill">${m.short_name || m.name} · ${m.biodegradable === "Yes" ? "bio" : "recycle"} · ${m.cost_tier || ""}</span>`
+    `<span class="pill">${m.short_name || m.name} · ${m.biodegradable === "Yes" ? "compostable" : "recyclable"} · ${m.cost_tier || ""}</span>`
   ).join("")}</div>`;
 }
 
@@ -429,14 +447,14 @@ function renderSpecs(specs) {
   const co2 = specs.required_co2tr || {};
   const mech = specs.mechanical || {};
   $("specs-grid").innerHTML = [
-    ["OTR window", `${otr.min}–${otr.max}`, otr.unit, otr.note],
-    ["WVTR window", `${wvtr.min}–${wvtr.max}`, wvtr.unit, wvtr.note],
-    ["CO₂TR window", `${co2.min}–${co2.max}`, co2.unit, co2.note],
-    ["Thickness", specs.recommended_thickness_um ? specs.recommended_thickness_um + " µm" : "—", "target gauge", "Within mill process window"],
-    ["Sealability", specs.sealability || "Heat seal", "", ""],
-    ["Mechanical", `${mech.puncture_resistance || "—"} puncture`, mech.tensile_strength ? mech.tensile_strength + " tensile" : "", mech.note || ""],
+    ["Air passing through (OTR)", `${otr.min}–${otr.max}`, otr.unit, otr.note],
+    ["Moisture passing through (WVTR)", `${wvtr.min}–${wvtr.max}`, wvtr.unit, wvtr.note],
+    ["CO₂ passing through (CO₂TR)", `${co2.min}–${co2.max}`, co2.unit, co2.note],
+    ["Thickness", specs.recommended_thickness_um ? specs.recommended_thickness_um + " µm" : "—", "pack thickness", "Fits the selected material range"],
+    ["How the pack closes", specs.sealability || "Heat seal", "", ""],
+    ["Strength during handling", `${mech.puncture_resistance || "—"} puncture resistance`, mech.tensile_strength ? mech.tensile_strength + " stretch strength" : "", plainPackNote(mech.note)],
   ].map(([k, v, u, n]) =>
-    `<div class="spec"><div class="k">${k}</div><div class="v">${v}</div><div class="u">${u || ""}</div><div class="n">${n || ""}</div></div>`
+    `<div class="spec"><div class="k">${k}</div><div class="v">${v}</div><div class="u">${u || ""}</div><div class="n">${plainPackNote(n)}</div></div>`
   ).join("");
 }
 
@@ -448,9 +466,9 @@ function renderStructure(top) {
     `<div class="layer"><b>${l.layer}</b><span>${l.material}</span><span class="muted">${l.role}</span></div>`
   ).join("");
   box.innerHTML = `
-    <p><b>${st.pack_format || "Pouch"}</b> · ${st.structure_type || ""} · seal: ${st.seal_type || "—"} · MAP: ${st.map_suitability || top.map_compatible}</p>
+    <p><b>${st.pack_format || "Pouch"}</b> · ${st.structure_type || ""} · closes with: ${st.seal_type || "—"} · gas mix: ${st.map_suitability || top.map_compatible}</p>
     <div class="layers" style="margin-top:12px">${layers}</div>
-    <p class="muted" style="margin-top:12px">${top.recommended_thickness?.note || ""} Best for: ${top.best_for || "—"}. Avoid: ${top.avoid_for || "—"}.</p>
+    <p class="muted" style="margin-top:12px">${top.recommended_thickness?.note || ""} Good for: ${top.best_for || "—"}. May not suit: ${top.avoid_for || "—"}.</p>
   `;
 }
 
@@ -470,27 +488,27 @@ function renderMap(map) {
       stroke-dasharray="${dash}" transform="rotate(${rot} ${c} ${c})" />`;
   }).join("");
   $("map-svg").innerHTML = `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="#ebe4d4" stroke-width="22"/>${arcs}
-    <text x="${c}" y="${c - 4}" text-anchor="middle" font-size="13" fill="#1f1a14" font-family="Newsreader, serif">MAP</text>
+    <text x="${c}" y="${c - 4}" text-anchor="middle" font-size="13" fill="#1f1a14" font-family="Newsreader, serif">GAS</text>
     <text x="${c}" y="${c + 14}" text-anchor="middle" font-size="10" fill="#6d6256" font-family="IBM Plex Mono, monospace">100%</text>`;
   $("map-leg").innerHTML = labels.map((l, i) =>
     `<div><span class="dot" style="background:${colors[i]}"></span><span>${l}</span><b style="margin-left:auto">${vals[i]}%</b></div>`
   ).join("");
-  $("map-note").textContent = map.note || "";
+  $("map-note").textContent = plainMapNote(map.note);
 }
 
 function renderShelf(sl) {
   const rows = [
-    ["s-none", "Loose / unpackaged", sl.unpackaged_days],
-    ["s-basic", "Generic film", sl.basic_pack_days],
-    ["s-rec", "Recommended mill pick", sl.recommended_pack_days],
-    ["s-map", "With MAP (if used)", sl.map_pack_days],
+    ["s-none", "No packaging", sl.unpackaged_days],
+    ["s-basic", "Basic packaging", sl.basic_pack_days],
+    ["s-rec", "Suggested pack", sl.recommended_pack_days],
+    ["s-map", "With protective gas mix", sl.map_pack_days],
   ];
   const max = Math.max(sl.desired_days || 14, sl.map_pack_days || 1, sl.recommended_pack_days || 1, 1);
   $("shelf-box").innerHTML = rows.map(([cls, lab, d]) => {
     const w = Math.min(100, ((d || 0) / max) * 100);
     return `<div class="shelf-row ${cls}"><span>${lab}</span><div class="track"><div class="fill" data-w="${w}">${d || 0} d</div></div><b>${d || 0} d</b></div>`;
-  }).join("") + `<p class="muted" style="margin-top:8px">Target ${sl.desired_days || "—"} days · ${sl.meets_target ? "window met" : "target may need MAP or colder store"}</p>`;
-  $("shelf-note").textContent = sl.note || "";
+  }).join("") + `<p class="muted" style="margin-top:8px">Freshness goal: ${sl.desired_days || "—"} days · ${sl.meets_target ? "goal reached" : "you may need a gas mix or colder storage"}</p>`;
+  $("shelf-note").textContent = "Freshness times are estimates. Check them with a small pack test.";
   requestAnimationFrame(() => {
     document.querySelectorAll("#shelf-box .fill").forEach((f) => { f.style.width = f.dataset.w + "%"; });
   });
@@ -500,12 +518,12 @@ function renderCost(cost) {
   const opts = cost.options || [];
   const max = Math.max(...opts.map((o) => o.estimated_pack_inr || 0), 1);
   $("cost-box").innerHTML = `
-    <p class="muted mb">Lot ${cost.quantity_kg || "—"} kg · film area ~${cost.assumed_film_area_m2 || "—"} m². Lowest: ${cost.lowest_cost_option || "—"} · spread ₹${cost.potential_savings_inr || 0}</p>
+    <p class="muted mb">Batch: ${cost.quantity_kg || "—"} kg · estimated film area: ${cost.assumed_film_area_m2 || "—"} m². Lowest-cost option: ${cost.lowest_cost_option || "—"} · difference: ₹${cost.potential_savings_inr || 0}</p>
     ${opts.map((o) => {
       const w = ((o.estimated_pack_inr || 0) / max) * 100;
       return `<div class="cost-row"><span>${o.name} (${o.cost_tier})</span><div class="track"><div class="fill" data-w="${w}"></div></div><b>₹${o.estimated_pack_inr}</b></div>`;
     }).join("")}
-    <p class="muted" style="margin-top:10px">${cost.note || ""}</p>`;
+    <p class="muted" style="margin-top:10px">Approximate packaging cost only. Printing and shipping are not included.</p>`;
   requestAnimationFrame(() => {
     document.querySelectorAll("#cost-box .fill").forEach((f) => { f.style.width = f.dataset.w + "%"; });
   });
@@ -522,11 +540,11 @@ function renderSustain(s) {
         <circle cx="80" cy="80" r="54" fill="none" stroke="#3d5a3c" stroke-width="12"
           stroke-dasharray="${circ}" stroke-dashoffset="${off}" transform="rotate(-90 80 80)" stroke-linecap="butt"/>
         <text x="80" y="76" text-anchor="middle" font-size="28" font-family="Newsreader, serif" fill="#1f1a14">${score}</text>
-        <text x="80" y="94" text-anchor="middle" font-size="11" fill="#6d6256" font-family="IBM Plex Mono, monospace">GRADE ${s.grade || "—"}</text>
+        <text x="80" y="94" text-anchor="middle" font-size="11" fill="#6d6256" font-family="IBM Plex Mono, monospace">ECO GRADE ${s.grade || "—"}</text>
       </svg>
       <div>
-        ${(s.ranked || []).map((r) => `<div class="profile-row"><span>${r.short_name}</span><b>${r.score} · ${r.recyclable === "Yes" ? "recycle" : ""} ${r.biodegradable === "Yes" ? "bio" : ""}</b></div>`).join("")}
-        <p class="muted" style="margin-top:10px">${s.note || ""}</p>
+        ${(s.ranked || []).map((r) => `<div class="profile-row"><span>${r.short_name}</span><b>${r.score} · ${r.recyclable === "Yes" ? "recyclable" : ""} ${r.biodegradable === "Yes" ? "compostable" : ""}</b></div>`).join("")}
+        <p class="muted" style="margin-top:10px">Eco score considers recycling and composting while keeping food protection in mind.</p>
       </div>
     </div>`;
 }
@@ -534,15 +552,57 @@ function renderSustain(s) {
 function renderStore(g) {
   const cells = [
     ["Temperature", g.temperature],
-    ["Relative humidity", g.relative_humidity],
+    ["Air moisture", g.relative_humidity],
     ["Light", g.light_exposure],
-    ["Transit", g.transport],
-    ["Shelf (ledger)", g.shelf_life_estimate],
+    ["Travel time", g.transport],
+    ["Freshness estimate", g.shelf_life_estimate],
   ];
   $("store-box").innerHTML = `<div class="spec-grid">${cells.map(([k, v]) =>
     `<div class="spec"><div class="k">${k}</div><div class="v" style="font-size:16px">${v || "—"}</div></div>`
   ).join("")}</div>
   <div style="margin-top:12px">${(g.special_notes || []).map((n) => `<div class="callout warn">${n}</div>`).join("")}</div>`;
+}
+
+function plainMapNote(note) {
+  if (!note) return "A suggested mix of oxygen, carbon dioxide, and nitrogen.";
+  const text = note.toLowerCase();
+  if (text.includes("nitrogen flush")) return "A nitrogen gas fill helps push most air out of the pack.";
+  if (text.includes("low o₂") || text.includes("low o2")) return "A low-oxygen mix may help keep this product fresh.";
+  if (text.includes("high co₂") || text.includes("high co2")) return "More carbon dioxide may help slow spoilage.";
+  if (text.includes("confirm") || text.includes("trial") || text.includes("validate")) return "Treat this gas mix as a starting point and check it with a small pack test.";
+  return "This suggested mix is a starting point. Check it with a small pack test.";
+}
+
+function plainPackNote(note) {
+  if (!note) return "";
+  const text = note.toLowerCase();
+  if (text.includes("high moisture")) return "Helps manage extra moisture inside the pack.";
+  if (text.includes("moderate moisture")) return "Balances moisture protection and freshness.";
+  if (text.includes("low moisture")) return "Helps keep dampness out.";
+  if (text.includes("very low moisture")) return "Strong moisture protection helps keep dry foods crisp.";
+  if (text.includes("road") || text.includes("sea freight") || text.includes("rail:") || text.includes("air:")) return "Adds protection for the bumps and handling during travel.";
+  if (text.includes("handling strength")) return "Chosen for the expected handling and travel.";
+  return note;
+}
+
+function plainProductNote(note) {
+  const text = String(note || "");
+  const lower = text.toLowerCase();
+  if (lower.includes("map") || lower.includes("modified atmosphere")) return "A protective gas mix may help keep this product fresh.";
+  if (lower.includes("co₂") || lower.includes("co2") || lower.includes("n₂") || lower.includes("n2")) return "A protective gas mix may help keep this product fresh.";
+  if (lower.includes("perforated")) return "A pack that lets air pass through may suit this product.";
+  return text;
+}
+
+function simpleMaterialDescription(description) {
+  const text = String(description || "");
+  const lower = text.toLowerCase();
+  if (lower.includes("laser holes") || lower.includes("high-respiration")) return "Lets more air pass through, which may suit fresh produce.";
+  if (lower.includes("permeability") || lower.includes("gas barrier")) return "Helps keep air and moisture away from the food.";
+  if (lower.includes("nitrogen") || lower.includes("pre-gassed")) return "Can be used with a protective gas fill.";
+  if (lower.includes("moisture") && lower.includes("heat seal")) return "Helps keep moisture out and can be closed with heat.";
+  if (lower.includes("oxygen") || lower.includes("light barrier")) return "Helps protect food from air, moisture, and light.";
+  return text;
 }
 
 function renderQR(tr) {
@@ -552,18 +612,18 @@ function renderQR(tr) {
   $("pack-id").textContent = tr.pack_id || "";
   const p = tr.payload || {};
   $("qr-kv").innerHTML = Object.entries({
-    "Pack ID": tr.pack_id,
+    "Batch code": tr.pack_id,
     Company: currentCompany,
-    Commodity: p.commodity,
+    Product: p.commodity,
     Material: p.material,
-    Gauge: p.thickness_um ? p.thickness_um + " µm" : "—",
-    Store: p.storage,
-    Issued: p.issued_utc,
+    Thickness: p.thickness_um ? p.thickness_um + " µm" : "—",
+    Storage: p.storage,
+    Created: p.issued_utc,
   }).map(([k, v]) => `<div class="kv"><b>${k}</b><span>${v || "—"}</span></div>`).join("");
 }
 
 function exportDossierJSON() {
-  if (!lastResults) { alert("No active dossier to export."); return; }
+  if (!lastResults) { alert("Create a recommendation before downloading a report."); return; }
   const exportPayload = {
     company: currentCompany,
     exported_at: new Date().toISOString(),
@@ -603,21 +663,21 @@ function runMaterialComparison() {
   
   const selected = [m1, m2, m3];
   
-  $("cmp-table-head").innerHTML = `<th>Technical Feature</th>` + selected.map((m) => `<th>${m.name} <small class="mono">(${m.short_name})</small></th>`).join("");
+  $("cmp-table-head").innerHTML = `<th>What to compare</th>` + selected.map((m) => `<th>${m.name} <small class="mono">(${m.short_name})</small></th>`).join("");
   
   const rows = [
-    ["Category / Class", (m) => m.category],
-    ["OTR Range (cc/m²/day)", (m) => `${m.otr_min} – ${m.otr_max}`],
-    ["WVTR Range (g/m²/day)", (m) => `${m.wvtr_min} – ${m.wvtr_max}`],
-    ["CO₂TR Range (cc/m²/day)", (m) => m.co2_tr_min != null ? `${m.co2_tr_min} – ${m.co2_tr_max}` : "—"],
-    ["Thickness Window (µm)", (m) => `${m.thickness_min} – ${m.thickness_max} µm`],
-    ["MAP Compatible", (m) => m.map_compatible || "No"],
-    ["Heat Sealable", (m) => m.heat_sealable || "No"],
-    ["Biodegradable", (m) => m.biodegradable === "Yes" ? '<span class="tag eco">Compostable</span>' : "No"],
+    ["Material type", (m) => m.category],
+    ["Air passing through (cc/m²/day)", (m) => `${m.otr_min} – ${m.otr_max}`],
+    ["Moisture passing through (g/m²/day)", (m) => `${m.wvtr_min} – ${m.wvtr_max}`],
+    ["CO₂ passing through (cc/m²/day)", (m) => m.co2_tr_min != null ? `${m.co2_tr_min} – ${m.co2_tr_max}` : "—"],
+    ["Thickness (µm)", (m) => `${m.thickness_min} – ${m.thickness_max} µm`],
+    ["Works with gas filling", (m) => m.map_compatible || "No"],
+    ["Can be closed with heat", (m) => m.heat_sealable || "No"],
+    ["Compostable", (m) => m.biodegradable === "Yes" ? '<span class="tag eco">Yes</span>' : "No"],
     ["Recyclable", (m) => m.recyclable === "Yes" ? '<span class="tag eco">Recyclable</span>' : "No"],
-    ["Cost Tier", (m) => m.cost_tier],
-    ["Description & Best For", (m) => `<b>${m.best_for || "General"}</b><br/><small class="muted">${m.description || ""}</small>`],
-    ["Avoid For", (m) => m.avoid_for || "—"],
+    ["Cost", (m) => m.cost_tier],
+    ["Works well for", (m) => `<b>${m.best_for || "General"}</b><br/><small class="muted">${m.description || ""}</small>`],
+    ["May not suit", (m) => m.avoid_for || "—"],
   ];
   
   $("cmp-table-body").innerHTML = rows.map(([label, fn]) =>
@@ -658,28 +718,28 @@ function runPackCalculator() {
   
   $("calc-output-box").innerHTML = `
     <div class="calc-metric-card">
-      <div class="muted">Total Pouches Required</div>
+      <div class="muted">Packs needed</div>
       <div class="val">${pouchesNeeded.toLocaleString()} units</div>
     </div>
     <div class="calc-metric-card">
-      <div class="muted">Total Film Surface Area</div>
+      <div class="muted">Total film area</div>
       <div class="val">${totalFilmAreaM2.toFixed(1)} m²</div>
     </div>
     <div class="calc-metric-card">
-      <div class="muted">Total Film Roll Weight</div>
+      <div class="muted">Total film weight</div>
       <div class="val">${filmWeightKg.toFixed(1)} kg</div>
     </div>
     <div class="calc-metric-card">
-      <div class="muted">Estimated Film Cost (Balanced Tier)</div>
+      <div class="muted">Estimated pack cost (mid range)</div>
       <div class="val">₹${estCostMed.toLocaleString()} <small style="font-size:14px;color:var(--mute)">(~₹${costPerPackMed}/pack)</small></div>
     </div>
-    <p class="muted" style="margin-top:12px">Cost ranges: Budget ₹${estCostLow.toLocaleString()} · Balanced ₹${estCostMed.toLocaleString()} · Premium Barrier ₹${estCostHigh.toLocaleString()}</p>
+    <p class="muted" style="margin-top:12px">Estimated ranges: Low cost ₹${estCostLow.toLocaleString()} · Mid range ₹${estCostMed.toLocaleString()} · High protection ₹${estCostHigh.toLocaleString()}</p>
   `;
 }
 
 function runLotVerification() {
   const rawId = $("inp-verify-id").value.trim();
-  if (!rawId) { alert("Enter a Pack ID or QR code text to verify."); return; }
+  if (!rawId) { alert("Enter a batch code or paste the text from its QR code."); return; }
   
   let targetId = rawId;
   if (rawId.includes("|")) {
@@ -700,20 +760,20 @@ function runLotVerification() {
   resBox.style.display = "block";
   
   const packIdDisplay = targetId.startsWith("SPA-") ? targetId : "SPA-" + targetId.toUpperCase();
-  const commodity = foundHist?.name || matchData?.inputs_used?.commodity || matchData?.traceability?.payload?.commodity || "Agricultural Commodity";
-  const material = foundHist?.material || matchData?.recommendations?.[0]?.name || "High Barrier Multilayer Film";
+  const commodity = foundHist?.name || matchData?.inputs_used?.commodity || matchData?.traceability?.payload?.commodity || "Food product";
+  const material = foundHist?.material || matchData?.recommendations?.[0]?.name || "Suggested packaging";
   const thickness = matchData?.specs?.recommended_thickness_um ? matchData.specs.recommended_thickness_um + " µm" : "40 µm";
   const storage = matchData?.inputs_used?.storage_type || "Ambient";
   const issued = foundHist ? new Date(foundHist.t).toISOString() : new Date().toISOString();
   
   $("verify-kv-body").innerHTML = `
-    <div class="profile-row"><span>Pack Lot ID</span><b class="mono">${packIdDisplay}</b></div>
-    <div class="profile-row"><span>Company Workspace</span><b>${currentCompany}</b></div>
-    <div class="profile-row"><span>Commodity</span><b>${commodity}</b></div>
-    <div class="profile-row"><span>Specified Material</span><b>${material}</b></div>
-    <div class="profile-row"><span>Target Gauge</span><b>${thickness}</b></div>
-    <div class="profile-row"><span>Storage Climate</span><b>${storage}</b></div>
-    <div class="profile-row"><span>Timestamp</span><b class="mono">${issued}</b></div>
+    <div class="profile-row"><span>Batch code</span><b class="mono">${packIdDisplay}</b></div>
+    <div class="profile-row"><span>Company</span><b>${currentCompany}</b></div>
+    <div class="profile-row"><span>Product</span><b>${commodity}</b></div>
+    <div class="profile-row"><span>Suggested material</span><b>${material}</b></div>
+    <div class="profile-row"><span>Pack thickness</span><b>${thickness}</b></div>
+    <div class="profile-row"><span>Storage</span><b>${storage}</b></div>
+    <div class="profile-row"><span>Date created</span><b class="mono">${issued}</b></div>
   `;
   $("v-hash").textContent = Math.abs(hashCode(packIdDisplay + commodity)).toString(16).toUpperCase().padStart(16, "0");
 }
@@ -722,12 +782,12 @@ function openMaterialModal(mat) {
   $("md-title").textContent = mat.name;
   $("md-short").textContent = mat.short_name;
   $("md-cat").textContent = mat.category;
-  $("md-desc").textContent = mat.description || "High performance packaging material.";
+  $("md-desc").textContent = simpleMaterialDescription(mat.description || "Packaging material details.");
   $("md-otr").textContent = `${mat.otr_min}–${mat.otr_max} cc/m²/day`;
   $("md-wvtr").textContent = `${mat.wvtr_min}–${mat.wvtr_max} g/m²/day`;
   $("md-co2").textContent = mat.co2_tr_min != null ? `${mat.co2_tr_min}–${mat.co2_tr_max} cc/m²/day` : "—";
   $("md-thick").textContent = `${mat.thickness_min}–${mat.thickness_max} µm`;
-  $("md-cost").textContent = mat.cost_tier + " Cost";
+  $("md-cost").textContent = mat.cost_tier + " cost";
   $("md-map").textContent = mat.map_compatible || "No";
   $("md-seal").textContent = mat.heat_sealable || "No";
   $("md-bio").textContent = mat.biodegradable || "No";
@@ -810,7 +870,7 @@ function openAdminEditMaterial(id) {
 
 function saveAdminMaterial() {
   const name = $("am-name").value.trim();
-  if (!name) { alert("Material name is required."); return; }
+  if (!name) { alert("Please enter a material name."); return; }
   const idVal = $("admin-mat-id").value;
   const isEdit = Boolean(idVal);
   const matId = isEdit ? parseInt(idVal, 10) : Date.now();
@@ -833,7 +893,7 @@ function saveAdminMaterial() {
     biodegradable: $("am-bio").value,
     recyclable: $("am-recycle").value,
     cost_tier: $("am-cost").value,
-    description: "Custom admin material entry.",
+    description: "Custom packaging material.",
     best_for: "General food packaging",
     avoid_for: "Extreme heat",
   };
@@ -852,7 +912,7 @@ function saveAdminMaterial() {
   renderMat(allMaterials);
   populateCompareSelectors();
   $("modal-admin-material").classList.remove("on");
-  alert(`Material '${name}' saved successfully to database!`);
+  alert(`Saved ${name}.`);
 }
 
 function saveCustomProduct() {
@@ -870,7 +930,7 @@ function saveCustomProduct() {
     optimal_rh_pct: parseFloat($("np-rh").value) || 90,
     storage_type_default: "chilled",
     shelf_life_chilled_days: 14,
-    notes: "Custom product added via company ledger.",
+    notes: "Custom product added by the user.",
   };
 
   const custom = JSON.parse(localStorage.getItem("spa-custom-commodities") || "[]");
@@ -880,7 +940,7 @@ function saveCustomProduct() {
   allCommodities = mergeCustomCommodities(allCommodities);
   renderCom(allCommodities);
   $("modal-add-product").classList.remove("on");
-  alert(`Product '${name}' added to commodity ledger!`);
+  alert(`Added ${name} to your product list.`);
 }
 
 async function loadCommoditiesTable() {
@@ -901,7 +961,7 @@ function renderCom(data) {
     <td>${c.moisture_pct != null ? c.moisture_pct + "%" : "—"}</td>
     <td>${c.fat_pct != null ? c.fat_pct + "%" : "—"}</td>
     <td>${c.ph != null && String(c.ph) !== "nan" ? c.ph : "—"}</td>
-    <td>${c.respiration_rate_class || "—"}</td>
+    <td>${simpleRespiration(c.respiration_rate_class)}</td>
     <td>${c.storage_type_default || "—"}</td>
     <td>${c.optimal_temp_c != null ? c.optimal_temp_c + "°C" : "—"}</td>
     <td>${c.optimal_rh_pct != null ? c.optimal_rh_pct + "%" : "—"}</td>
@@ -936,9 +996,9 @@ function renderHistory() {
   const list = getHistoryList().filter((h) => !h.company || h.company === currentCompany);
   const box = $("history");
   if (!box) return;
-  if (!list.length) { box.innerHTML = "<p class='muted'>No specs generated yet for this workspace.</p>"; return; }
+  if (!list.length) { box.innerHTML = "<p class='muted'>Your saved recommendations will appear here.</p>"; return; }
   box.innerHTML = list.slice(0, 6).map((h) =>
-    `<button type="button" data-hist="${h.name}">${h.name} · ${h.material || "mill"} · ${new Date(h.t).toLocaleDateString()}</button>`
+    `<button type="button" data-hist="${h.name}">${h.name} · ${h.material || "packaging"} · ${new Date(h.t).toLocaleDateString()}</button>`
   ).join("");
 }
 
@@ -952,7 +1012,7 @@ function loadHistoryTable() {
   const tbody = $("history-full-tbody");
   if (!tbody) return;
   if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">No saved dossiers found in history.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">No saved recommendations found.</td></tr>`;
     return;
   }
   tbody.innerHTML = filtered.map((h, i) => `
@@ -972,7 +1032,7 @@ function loadHistoryTable() {
 
 function compareSelectedHistory() {
   const chks = document.querySelectorAll(".hist-chk:checked");
-  if (chks.length < 2) { alert("Select at least 2 dossiers from history to compare."); return; }
+  if (chks.length < 2) { alert("Select at least 2 saved recommendations to compare."); return; }
   const list = getHistoryList();
   const selected = Array.from(chks).slice(0, 3).map((c) => list[parseInt(c.dataset.histIdx, 10)]);
   
@@ -983,19 +1043,19 @@ function compareSelectedHistory() {
       <table class="data cmp-table">
         <thead>
           <tr>
-            <th>Dossier Metric</th>
+            <th>Details</th>
             ${selected.map((s) => `<th>${s.name}<br/><small class="mono">${s.pack_id || "—"}</small></th>`).join("")}
           </tr>
         </thead>
         <tbody>
-          <tr><td class="main">Commodity</td>${selected.map((s) => `<td>${s.name}</td>`).join("")}</tr>
-          <tr><td class="main">Recommended Material</td>${selected.map((s) => `<td><b>${s.full_material || s.material}</b></td>`).join("")}</tr>
-          <tr><td class="main">Storage Zone</td>${selected.map((s) => `<td>${s.storage || "ambient"}</td>`).join("")}</tr>
-          <tr><td class="main">Match Score</td>${selected.map((s) => `<td><b>${s.match_pct || 85}%</b></td>`).join("")}</tr>
-          <tr><td class="main">Recommended Thickness</td>${selected.map((s) => `<td>${s.thickness_um || 40} µm</td>`).join("")}</tr>
-          <tr><td class="main">Target Shelf Life</td>${selected.map((s) => `<td>${s.shelf_days || "—"} days</td>`).join("")}</tr>
-          <tr><td class="main">Sustainability Grade</td>${selected.map((s) => `<td>Grade ${s.eco_grade || "B"}</td>`).join("")}</tr>
-          <tr><td class="main">Timestamp</td>${selected.map((s) => `<td class="mono" style="font-size:11px">${new Date(s.t).toLocaleString()}</td>`).join("")}</tr>
+          <tr><td class="main">Product</td>${selected.map((s) => `<td>${s.name}</td>`).join("")}</tr>
+          <tr><td class="main">Suggested pack</td>${selected.map((s) => `<td><b>${s.full_material || s.material}</b></td>`).join("")}</tr>
+          <tr><td class="main">Storage</td>${selected.map((s) => `<td>${s.storage || "room temperature"}</td>`).join("")}</tr>
+          <tr><td class="main">Fit score</td>${selected.map((s) => `<td><b>${s.match_pct || 85}%</b></td>`).join("")}</tr>
+          <tr><td class="main">Pack thickness</td>${selected.map((s) => `<td>${s.thickness_um || 40} µm</td>`).join("")}</tr>
+          <tr><td class="main">Freshness goal</td>${selected.map((s) => `<td>${s.shelf_days || "—"} days</td>`).join("")}</tr>
+          <tr><td class="main">Eco score</td>${selected.map((s) => `<td>Grade ${s.eco_grade || "B"}</td>`).join("")}</tr>
+          <tr><td class="main">Date saved</td>${selected.map((s) => `<td class="mono" style="font-size:11px">${new Date(s.t).toLocaleString()}</td>`).join("")}</tr>
         </tbody>
       </table>
     </div>
@@ -1073,7 +1133,7 @@ function clientRecommend(inp) {
   return {
     success: true,
     engine: "client-smart-pack",
-    ai_explanation: `Recommendation formulated for ${inp.commodity} under ${storage} conditions. Based on physical profile (${inp.moisture}% moisture, pH ${inp.ph}, respiration class: ${resp}), ${top3[0]?.name || "selected film"} is recommended to balance oxygen transmission and moisture retention while maximizing storage shelf life.`,
+    ai_explanation: `${top3[0]?.name || "This pack"} may suit ${inp.commodity} because it balances freshness, storage, and travel needs. Use this as a starting point and check the pack with a small trial.`,
     commodity_info: detail || null,
     recommendations: top3,
     eco_alternatives: eco,
@@ -1150,7 +1210,7 @@ function fmtClient(m, mech, resp, inp) {
     },
     mechanical: mech,
     color_barrier: m.uv_barrier,
-    justification: `Offers optimal gas permeability (OTR: ${m.otr_min}–${m.otr_max}) and moisture protection suited for ${resp.toLowerCase()} respiration commodities.`,
+    justification: "May help protect this product during storage and travel. Check the protection details and freshness estimate before choosing.",
   };
 }
 
@@ -1190,12 +1250,48 @@ const FALLBACK_MATERIALS = [
   { id: 19, name: "Modified Atmosphere Bag", short_name: "MAP-PP", category: "MAP Packaging", otr_min: 500, otr_max: 2000, wvtr_min: 5, wvtr_max: 15, co2_tr_min: 1500, co2_tr_max: 5500, thickness_min: 30, thickness_max: 80, biodegradable: "No", recyclable: "Yes", heat_sealable: "Yes", map_compatible: "Yes", cost_tier: "High", uv_barrier: "No", description: "Pre-gassed protein packs.", best_for: "Meat, meals", avoid_for: "High-respiration produce" },
 ];
 
+function updateLivePackPreview() {
+  if (!$('preview-product')) return;
+  const product = $('inp-commodity').value.trim();
+  const storage = document.querySelector('input[name=storage_type]:checked')?.value || 'ambient';
+  const travel = $('inp-transport').selectedOptions[0]?.textContent.split(' — ')[0] || 'Road';
+  const storageName = { ambient: 'Room temperature', chilled: 'Chilled', frozen: 'Frozen' }[storage] || 'Room temperature';
+  const goal = parseInt($('inp-shelf-life').value, 10) || 14;
+  const choices = [];
+  if ($('inp-eco').checked) choices.push('Greener options');
+  if ($('inp-map').checked) choices.push('Gas fill ready');
+  if (!choices.length) choices.push($('inp-cost').value === 'low_cost' ? 'Budget focused' : $('inp-cost').value === 'quality_first' ? 'Extra protection' : 'Balanced choice');
+
+  $('preview-product').textContent = product || 'Your product';
+  $('preview-context').textContent = product
+    ? `${storageName} storage · ${travel} travel`
+    : 'Choose storage and travel details to see your plan come together.';
+  $('preview-goal').textContent = `Freshness goal: ${goal} days`;
+  $('preview-preference').textContent = choices.join(' · ');
+  const card = $('live-pack-card');
+  card.classList.remove('storage-ambient', 'storage-chilled', 'storage-frozen');
+  card.classList.add('storage-' + storage);
+  card.classList.toggle('has-product', Boolean(product));
+  const progressSteps = [['product', Boolean(product)], ['storage', Boolean(storage)], ['travel', Boolean($('inp-transport').value)]];
+  const readyCount = progressSteps.filter(([, active]) => active).length;
+  $('setup-progress-fill').style.width = `${readyCount / progressSteps.length * 100}%`;
+  $('setup-progress').setAttribute('aria-valuenow', readyCount);
+  $('setup-progress-label').textContent = `${readyCount} of 3 details ready`;
+  progressSteps
+    .forEach(([step, active]) => $('journey-' + step).classList.toggle('complete', active));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   updateCompanyDisplay();
   renderDemos();
   loadCommoditiesData();
   renderHistory();
   updateRange("moisture"); updateRange("fat"); updateRange("ph");
+  updateLivePackPreview();
+  document.querySelectorAll('#page-recommend input, #page-recommend select').forEach((control) => {
+    control.addEventListener('input', updateLivePackPreview);
+    control.addEventListener('change', updateLivePackPreview);
+  });
 
   document.querySelectorAll(".nav a").forEach((a) => {
     a.addEventListener("click", (e) => { e.preventDefault(); navigate(a.dataset.page); });

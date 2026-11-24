@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Pack AI — Packhouse Intelligence Console</title>
-  <meta name="description" content="Intelligent food packaging recommendation platform for agricultural commodities, fresh produce, dairy, meat, and dry goods. OTR, WVTR, MAP, shelf life, cost, sustainability and QR lot traceability." />
+  <title>Smart Pack AI — Simple packaging recommendations</title>
+  <meta name="description" content="Find a suitable food pack, compare materials, estimate storage life and cost, and keep batch records." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,7 +19,7 @@
       </div>
       <div>
         <h1>Smart Pack <span>AI</span></h1>
-        <p>Packhouse console</p>
+        <p>Packaging made simpler</p>
       </div>
     </div>
     
@@ -27,38 +27,38 @@
       <span class="dot-live"></span>
       <div class="c-info">
         <strong id="company-name-display">GreenField Packhouses Ltd.</strong>
-        <span class="muted">Enterprise Workspace ▾</span>
+        <span class="muted">Company workspace ▾</span>
       </div>
     </div>
 
     <nav class="nav">
-      <div class="nav-kicker">Floor</div>
-      <a href="#" class="active" data-page="dashboard">Overview &amp; Analytics</a>
-      <a href="#" data-page="recommend">New spec <span class="chip">LIVE</span></a>
-      <a href="#" data-page="results" id="nav-results" style="display:none">Last dossier</a>
+      <div class="nav-kicker">Home</div>
+      <a href="#" class="active" data-page="dashboard">Overview</a>
+      <a href="#" data-page="recommend">New recommendation <span class="chip">NEW</span></a>
+      <a href="#" data-page="results" id="nav-results" style="display:none">Latest report</a>
       
-      <div class="nav-kicker">Records &amp; History</div>
-      <a href="#" data-page="history">Recommendation history</a>
-      <a href="#" data-page="history_compare">Compare past specs</a>
+      <div class="nav-kicker">Saved</div>
+      <a href="#" data-page="history">Saved recommendations</a>
+      <a href="#" data-page="history_compare">Compare past reports</a>
       
-      <div class="nav-kicker">Tools &amp; Simulators</div>
+      <div class="nav-kicker">Tools</div>
       <a href="#" data-page="compare">Compare materials</a>
       <a href="#" data-page="calculator">Pack calculator</a>
-      <a href="#" data-page="verifier">Lot verifier</a>
+      <a href="#" data-page="verifier">Check a batch</a>
       
-      <div class="nav-kicker">Databases &amp; Admin</div>
-      <a href="#" data-page="materials">Materials mill &amp; Admin</a>
-      <a href="#" data-page="commodities">Commodity ledger</a>
+      <div class="nav-kicker">Lists &amp; settings</div>
+      <a href="#" data-page="materials">Packaging materials</a>
+      <a href="#" data-page="commodities">Product list</a>
       
-      <div class="nav-kicker">System</div>
-      <a href="#" data-page="about">Documentation</a>
+      <div class="nav-kicker">Help</div>
+      <a href="#" data-page="about">How it helps</a>
     </nav>
 
     <div class="rail-foot">
       <div class="stamp">
         <b>Smart Pack AI</b>
-        <strong>v3.0 AI Engine</strong>
-        <span class="muted">Local ML + Gemini Packhouse Platform</span>
+        <strong>Packaging made simpler</strong>
+        <span class="muted">Plan, compare, and save</span>
       </div>
     </div>
   </aside>
@@ -67,13 +67,13 @@
     <header class="mast">
       <button class="burger" id="burger" aria-label="Menu">☰</button>
       <div>
-        <h2 id="mast-title">Overview &amp; Analytics</h2>
-        <div class="sub" id="mast-sub">Packhouse decision support &amp; food waste analytics</div>
+        <h2 id="mast-title">Overview</h2>
+        <div class="sub" id="mast-sub">Your packaging plans and saved results</div>
       </div>
       <div class="mast-actions">
         <button class="btn btn-ghost" id="btn-open-login">Switch Company</button>
-        <button class="btn btn-ghost" data-go="materials">Mill Catalogue</button>
-        <button class="btn btn-terra" data-go="recommend">Open New Spec</button>
+        <button class="btn btn-ghost" data-go="materials">Browse materials</button>
+        <button class="btn btn-terra" data-go="recommend">New recommendation</button>
       </div>
     </header>
 
@@ -83,29 +83,28 @@
       <section class="page on" id="page-dashboard">
         <div class="hero">
           <div class="hero-copy">
-            <div class="kicker">PACKAGING DECISION &amp; ANALYTICS PLATFORM</div>
-            <h3>Specify the pack before the produce leaves the yard.</h3>
+            <div class="kicker">A BETTER PACK STARTS HERE</div>
+            <h3>Find a pack that fits your product and its journey.</h3>
             <p>
-              Barrier engineering, breathability, MAP gas formulations, film thickness, and cost optimization — scored against moisture, fat, pH,
-              respiration, store climate and logistics dynamics. Built for food processors, growers, pack-houses, and brand owners.
+              Tell us what you’re packing, how it will be stored, and where it’s going. Get clear packaging suggestions, storage tips, cost estimates, and greener options in one place.
             </p>
             <div class="hero-btns">
-              <button class="btn btn-terra" data-go="recommend">Write a spec</button>
-              <button class="btn btn-ghost" data-go="about">Platform docs</button>
+              <button class="btn btn-terra" data-go="recommend">Get a recommendation</button>
+              <button class="btn btn-ghost" data-go="about">How it works</button>
             </div>
           </div>
           <div class="hero-art">
             <svg viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect x="18" y="28" width="244" height="148" stroke="#1f1a14" stroke-width="1.4"/>
-              <rect x="36" y="48" width="208" height="18" fill="#3d5a3c"/>
-              <text x="46" y="61" fill="#fffaf1" font-size="10" font-family="IBM Plex Mono, monospace">PRINT / PET 12µm</text>
-              <rect x="36" y="66" width="208" height="28" fill="#c45c26"/>
-              <text x="46" y="84" fill="#fffaf1" font-size="10" font-family="IBM Plex Mono, monospace">BARRIER — OTR / WVTR</text>
-              <rect x="36" y="94" width="208" height="22" fill="#a6843a"/>
-              <text x="46" y="109" fill="#1f1a14" font-size="10" font-family="IBM Plex Mono, monospace">SEALANT LDPE</text>
+              <rect x="36" y="48" width="208" height="18" fill="#41846a"/>
+              <text x="46" y="61" fill="#fffaf1" font-size="10" font-family="IBM Plex Mono, monospace">FRESHNESS LAYER</text>
+              <rect x="36" y="66" width="208" height="28" fill="#e76f51"/>
+              <text x="46" y="84" fill="#fffaf1" font-size="10" font-family="IBM Plex Mono, monospace">PROTECTIVE SHIELD</text>
+              <rect x="36" y="94" width="208" height="22" fill="#f2c66d"/>
+              <text x="46" y="109" fill="#20352c" font-size="10" font-family="IBM Plex Mono, monospace">STRONG, SECURE SEAL</text>
               <rect x="36" y="116" width="208" height="40" fill="#fffaf1" stroke="#1f1a14"/>
-              <text x="46" y="134" fill="#1f1a14" font-size="10" font-family="IBM Plex Mono, monospace">HEADSPACE  O₂  CO₂  N₂</text>
-              <text x="46" y="150" fill="#6d6256" font-size="9" font-family="IBM Plex Mono, monospace">ASTM F1383  ·  ISO 15105-1</text>
+              <text x="46" y="134" fill="#1f1a14" font-size="10" font-family="IBM Plex Mono, monospace">CARE INSIDE EVERY LAYER</text>
+              <text x="46" y="150" fill="#6d6256" font-size="9" font-family="IBM Plex Mono, monospace">FRESHNESS · STRENGTH · CARE</text>
             </svg>
           </div>
         </div>
@@ -113,29 +112,29 @@
         <!-- DASHBOARD ANALYTICS KPIS -->
         <div class="panel">
           <div class="panel-h">
-            <h4>Dashboard Performance &amp; Sustainability Analytics <em>REAL-TIME METRICS</em></h4>
+            <h4>Your packaging at a glance <em>QUICK SUMMARY</em></h4>
           </div>
           <div class="panel-b">
             <div class="metrics">
               <div class="metric">
                 <div class="n" id="dash-total-specs">128</div>
-                <div class="l">Dossiers Generated</div>
-                <div class="t">Company workspace</div>
+                <div class="l">Plans created</div>
+                <div class="t">In this workspace</div>
               </div>
               <div class="metric">
                 <div class="n" id="dash-waste-saved">42.8 T</div>
-                <div class="l">Food-Waste Reduced</div>
-                <div class="t">~32% Loss Prevention</div>
+                <div class="l">Food waste avoided</div>
+                <div class="t">Estimated from saved plans</div>
               </div>
               <div class="metric">
                 <div class="n" id="dash-avg-shelf">+185%</div>
-                <div class="l">Avg Shelf Life Extension</div>
-                <div class="t">Vs Unpackaged Baseline</div>
+                <div class="l">Longer freshness</div>
+                <div class="t">Compared with no packaging</div>
               </div>
               <div class="metric">
                 <div class="n" id="dash-eco-score">78 / 100</div>
-                <div class="l">Sustainability Index</div>
-                <div class="t">Recyclable &amp; Bio Stocks</div>
+                <div class="l">Eco-friendly score</div>
+                <div class="t">Reuse and recycling options</div>
               </div>
             </div>
           </div>
@@ -143,38 +142,38 @@
 
         <div class="grid-2">
           <div class="panel">
-            <div class="panel-h"><h4>Standard Commodity Presets <em>QUICK LAUNCH</em></h4></div>
+            <div class="panel-h"><h4>Try a popular product <em>QUICK START</em></h4></div>
             <div class="panel-b">
-              <p class="muted mb">Select a standard commodity lot to generate a complete specification instantaneously.</p>
+              <p class="muted mb">Choose a product to start with its usual storage settings.</p>
               <div class="pills" id="demos"></div>
             </div>
           </div>
           <div class="panel">
-            <div class="panel-h"><h4>Recent Dossiers <em>SESSION HISTORY</em></h4></div>
+            <div class="panel-h"><h4>Recent recommendations <em>THIS SESSION</em></h4></div>
             <div class="panel-b">
-              <div class="history" id="history"><p class="muted">No specs generated yet in this session.</p></div>
+              <div class="history" id="history"><p class="muted">Your recent recommendations will appear here.</p></div>
             </div>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panel-h"><h4>Enterprise Operational Impact &amp; Insights <em>STANDARDS &amp; QUALITY</em></h4></div>
+          <div class="panel-h"><h4>How better packaging helps <em>FRESHNESS · COST · PLANET</em></h4></div>
           <div class="panel-b">
             <div class="features-grid">
               <article class="feature-card">
                 <div class="icon-tag">01</div>
-                <h5>Preservation Excellence</h5>
-                <p>Precise OTR, WVTR, and CO₂TR transmission calculations prevent condensation, texture loss, and oxidation across distribution chains.</p>
+                <h5>Keep food fresh</h5>
+                <p>Compare how well each pack protects your food from air and moisture while it travels and waits in storage.</p>
               </article>
               <article class="feature-card">
                 <div class="icon-tag">02</div>
-                <h5>Automated Engineering</h5>
-                <p>Local material matching ranks packaging options against product needs, then the packaging engine calculates MAP and storage guidance.</p>
+                <h5>Choose with confidence</h5>
+                <p>See suitable packs, a clear explanation, storage tips, and an estimate of how long your product may stay fresh.</p>
               </article>
               <article class="feature-card">
                 <div class="icon-tag">03</div>
-                <h5>Sustainable Transition</h5>
-                <p>Compostable, bio-based, and recyclable mono-materials scored automatically without compromising product safety.</p>
+                <h5>Find greener options</h5>
+                <p>Compare recyclable and compostable choices alongside their cost and protection for your product.</p>
               </article>
             </div>
           </div>
@@ -186,10 +185,10 @@
         <div class="grid-form">
           <div>
             <div class="panel">
-              <div class="panel-h"><h4>01 Commodity / Product Selection <em>REQUIRED</em></h4></div>
+              <div class="panel-h"><h4>01 What are you packing? <em>REQUIRED</em></h4></div>
               <div class="panel-b">
                 <div class="fg">
-                  <label>Commodity / Product Name <span class="req">*</span><span class="hint">Search the ledger</span></label>
+                  <label>Product name <span class="req">*</span><span class="hint">Search the product list</span></label>
                   <div class="ac">
                     <input class="inp" id="inp-commodity" placeholder="Tomato, mango, paneer, rice…" autocomplete="off" />
                     <div class="ac-list" id="ac-list"></div>
@@ -204,42 +203,42 @@
             </div>
 
             <div class="panel">
-              <div class="panel-h"><h4>02 Food Physical Properties <em>ANALYSIS</em></h4></div>
+              <div class="panel-h"><h4>02 Product details <em>OPTIONAL · AUTO-FILLED WHEN AVAILABLE</em></h4></div>
               <div class="panel-b">
                 <div class="fields three">
                   <div class="fg">
-                    <div class="range-h"><label>Moisture Content</label><b id="val-moisture">70%</b></div>
+                    <div class="range-h"><label>Water content</label><b id="val-moisture">70%</b></div>
                     <input type="range" id="inp-moisture" min="0" max="100" step="0.5" value="70" />
                   </div>
                   <div class="fg">
-                    <div class="range-h"><label>Fat / Oil Content</label><b id="val-fat">1%</b></div>
+                    <div class="range-h"><label>Fat or oil content</label><b id="val-fat">1%</b></div>
                     <input type="range" id="inp-fat" min="0" max="80" step="0.5" value="1" />
                   </div>
                   <div class="fg">
-                    <div class="range-h"><label>pH Level</label><b id="val-ph">6.0</b></div>
+                    <div class="range-h"><label>Acidity (pH)</label><b id="val-ph">6.0</b></div>
                     <input type="range" id="inp-ph" min="0" max="14" step="0.1" value="6" />
                   </div>
                 </div>
                 <div class="fg">
-                  <label>Respiration Rate Class<span class="hint">Leave blank to auto-detect</span></label>
+                  <label>How quickly it uses oxygen<span class="hint">Leave blank to fill this in automatically</span></label>
                   <select class="inp" id="inp-respiration">
-                    <option value="">Auto-detect from commodity</option>
-                    <option value="Very High">Very High — roots, bulbs</option>
-                    <option value="Low">Low — apple, citrus</option>
-                    <option value="Moderate">Moderate — tomato, mango</option>
-                    <option value="High">High — strawberry, lettuce</option>
-                    <option value="Very High">Very High — broccoli, mushroom</option>
-                    <option value="NA">Not applicable — dairy, meat, dry</option>
+                    <option value="">Choose automatically</option>
+                    <option value="Very High">Very fast — roots, bulbs</option>
+                    <option value="Low">Slow — apple, citrus</option>
+                    <option value="Moderate">Medium — tomato, mango</option>
+                    <option value="High">Fast — strawberry, lettuce</option>
+                    <option value="Very High">Very fast — broccoli, mushroom</option>
+                    <option value="NA">Not needed — dairy, meat, dry foods</option>
                   </select>
                 </div>
               </div>
             </div>
 
             <div class="panel">
-              <div class="panel-h"><h4>03 Storage &amp; Transport Climate <em>CONDITIONS</em></h4></div>
+              <div class="panel-h"><h4>03 Where will it be stored and shipped? <em>CONDITIONS</em></h4></div>
               <div class="panel-b">
                 <div class="fg">
-                  <label>Storage Temperature Zone <span class="req">*</span></label>
+                  <label>Storage temperature <span class="req">*</span></label>
                   <div class="seg">
                     <label><input type="radio" name="storage_type" value="ambient" checked /><span>Ambient</span></label>
                     <label><input type="radio" name="storage_type" value="chilled" /><span>Chilled 2–8°C</span></label>
@@ -248,29 +247,29 @@
                 </div>
                 <div class="fields">
                   <div class="fg">
-                    <label>Target Shelf Life<span class="hint" id="hint-shelf"></span></label>
+                    <label>Freshness goal<span class="hint" id="hint-shelf"></span></label>
                     <div class="unit"><input class="inp" type="number" id="inp-shelf-life" min="1" max="730" value="14" /><i>days</i></div>
                   </div>
                   <div class="fg">
-                    <label>Store Temperature</label>
+                    <label>More exact storage temperature</label>
                     <div class="unit"><input class="inp" type="number" id="inp-temp" step="0.5" placeholder="e.g. 4" /><i>°C</i></div>
                   </div>
                   <div class="fg">
-                    <label>Relative Humidity</label>
+                    <label>Air moisture</label>
                     <div class="unit"><input class="inp" type="number" id="inp-rh" min="0" max="100" placeholder="e.g. 90" /><i>% RH</i></div>
                   </div>
                   <div class="fg">
-                    <label>Transit Duration</label>
+                    <label>Travel time</label>
                     <div class="unit"><input class="inp" type="number" id="inp-hours" min="0" value="12" /><i>hours</i></div>
                   </div>
                   <div class="fg span2">
-                    <label>Transportation Mode</label>
+                  <label>How will it travel?</label>
                     <select class="inp" id="inp-transport">
-                      <option value="road">Road — vibration, stacking</option>
-                      <option value="rail">Rail — shock, compression</option>
-                      <option value="sea">Sea — humidity, salt, long haul</option>
-                      <option value="air">Air — pressure cycling</option>
-                      <option value="last-mile">Last-mile — mixed handling</option>
+                      <option value="road">Road — bumps and stacking</option>
+                      <option value="rail">Rail — shaking and pressure</option>
+                      <option value="sea">Sea — damp air and long trips</option>
+                      <option value="air">Air — changing pressure</option>
+                      <option value="last-mile">Local delivery — frequent handling</option>
                     </select>
                   </div>
                 </div>
@@ -278,47 +277,69 @@
             </div>
 
             <div class="panel">
-              <div class="panel-h"><h4>04 Mill Constraints &amp; Preferences <em>CONSTRAINTS</em></h4></div>
+              <div class="panel-h"><h4>04 Your preferences <em>OPTIONAL</em></h4></div>
               <div class="panel-b">
                 <div class="fields">
                   <div class="fg">
                     <label>Cost Priority</label>
                     <select class="inp" id="inp-cost">
-                      <option value="low_cost">Budget — low film cost</option>
+                      <option value="low_cost">Budget — lower packaging cost</option>
                       <option value="balanced" selected>Balanced</option>
-                      <option value="quality_first">Quality first — premium barrier</option>
+                      <option value="quality_first">Protect food first — may cost more</option>
                     </select>
                   </div>
                   <div class="fg">
-                    <label>Production Lot Size</label>
+                    <label>Batch size</label>
                     <div class="unit"><input class="inp" type="number" id="inp-quantity" min="1" placeholder="500" /><i>kg</i></div>
                   </div>
                 </div>
                 <div class="toggle">
-                  <div><b>Prefer compostable / recyclable mill stock</b><small>Eco options ranked higher when barrier still holds</small></div>
+                  <div><b>Prefer recyclable or compostable packs</b><small>We’ll favor greener choices that still protect your product</small></div>
                   <input type="checkbox" id="inp-eco" />
                 </div>
                 <div class="toggle">
-                  <div><b>MAP gas-flush equipment available</b><small>Opens MAP-compatible films and gas recipes</small></div>
+                  <div><b>Gas-filling equipment available</b><small>Shows packs and protective gas mixes that use this equipment</small></div>
                   <input type="checkbox" id="inp-map" />
                 </div>
               </div>
             </div>
 
-            <button class="btn btn-terra btn-lg" id="btn-run">🤖 Run ML + Gemini Recommendation</button>
+            <button class="btn btn-terra btn-lg" id="btn-run">Get my recommendation</button>
           </div>
 
           <aside>
+            <div class="panel live-pack-card" id="live-pack-card">
+              <div class="panel-h"><h4>Your pack, taking shape</h4><span class="live-label"><i></i> LIVE PREVIEW</span></div>
+              <div class="panel-b">
+                <div class="pack-stage" aria-hidden="true">
+                  <div class="pack-orbit orbit-one"></div><div class="pack-orbit orbit-two"></div>
+                  <div class="pack-shape"><span class="pack-seal"></span><span class="pack-window"></span><span class="pack-leaf">✦</span></div>
+                  <span class="pack-spark spark-one">✳</span><span class="pack-spark spark-two">✦</span>
+                </div>
+                <div class="pack-preview-copy">
+                  <strong id="preview-product">Your product</strong>
+                  <span id="preview-context">Choose storage and travel details to see your plan come together.</span>
+                </div>
+                <div class="journey-steps" aria-label="Recommendation setup progress">
+                  <div class="journey-step" id="journey-product"><i>1</i><span>Product</span></div>
+                  <div class="journey-step" id="journey-storage"><i>2</i><span>Storage</span></div>
+                  <div class="journey-step" id="journey-travel"><i>3</i><span>Travel</span></div>
+                </div>
+                <div class="setup-progress" id="setup-progress" role="progressbar" aria-label="Recommendation setup progress" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1"><span id="setup-progress-fill"></span></div>
+                <div class="setup-caption"><span>Plan setup</span><b id="setup-progress-label">1 of 3 details ready</b></div>
+                <div class="preview-tags"><span id="preview-goal">Freshness goal: 14 days</span><span id="preview-preference">Balanced choice</span></div>
+              </div>
+            </div>
             <div class="panel" id="profile-panel" style="display:none">
-              <div class="panel-h"><h4>Product Ledger Card</h4></div>
+              <div class="panel-h"><h4>Product details</h4></div>
               <div class="panel-b" id="profile-body"></div>
             </div>
             <div class="panel">
-              <div class="panel-h"><h4>Packhouse Yard Notes</h4></div>
+              <div class="panel-h"><h4>Helpful tips</h4></div>
               <div class="panel-b">
-                <div class="callout info">Type a commodity — moisture, pH, fat and respiration auto-fill from the ledger.</div>
-                <div class="callout warn">Fresh brassicas and mushrooms need breathable or micro-perforated stock, not foil.</div>
-                <div class="callout ok">High-fat snacks need oxygen and light barrier plus nitrogen flush.</div>
+                <div class="callout info">Choose a product and its usual details will fill in when available.</div>
+                <div class="callout warn">Fresh broccoli and mushrooms need packs that let air move through—not a fully sealed foil pack.</div>
+                <div class="callout ok">Oily snacks stay fresher when their pack keeps out air and light. A nitrogen gas fill may help.</div>
               </div>
             </div>
           </aside>
@@ -329,35 +350,35 @@
       <section class="page" id="page-results">
         <div id="results-empty" class="panel">
           <div class="empty">
-            <div class="kicker">No dossier</div>
-            <h3>Run a mill spec first</h3>
-            <p class="muted mb">OTR, MAP, shelf life, cost and QR appear here after analysis.</p>
-            <button class="btn btn-terra" data-go="recommend">Open new spec</button>
+            <div class="kicker">No recommendation yet</div>
+            <h3>Start with your product details</h3>
+            <p class="muted mb">Your packaging suggestions, freshness estimate, costs, and batch code will appear here.</p>
+            <button class="btn btn-terra" data-go="recommend">Get a recommendation</button>
           </div>
         </div>
 
         <div id="results-content" style="display:none">
           <div class="flex between mb" style="align-items:flex-end;flex-wrap:wrap;gap:12px">
             <div>
-              <div class="kicker">PACKAGING RECOMMENDATION DOSSIER</div>
+              <div class="kicker">YOUR PACKAGING PLAN</div>
               <h2 id="results-headline" style="font-family:var(--serif);font-size:28px"></h2>
             </div>
             <div class="flex gap">
-              <button class="btn btn-ghost" id="btn-export-json">Export JSON Report</button>
-              <button class="btn btn-ghost" onclick="window.print()">Print Spec Sheet</button>
-              <button class="btn btn-terra" data-go="recommend">New Spec</button>
+              <button class="btn btn-ghost" id="btn-export-json">Download report</button>
+              <button class="btn btn-ghost" onclick="window.print()">Print plan</button>
+              <button class="btn btn-terra" data-go="recommend">New recommendation</button>
             </div>
           </div>
 
           <!-- AI EXPLANATION BANNER -->
           <div class="panel mb" id="ai-explanation-panel" style="background:linear-gradient(135deg, #dce6d4 0%, #d5e4e8 100%);border-color:#b7c9b0">
             <div class="panel-h" style="background:rgba(61,90,60,0.12)">
-              <h4>🤖 What the Model Recommends and Why <em>LOCAL ML + GEMINI EXPLANATION</em></h4>
-              <span class="tag eco" style="font-size:11px;padding:3px 8px" id="engine-tag">AI ENGINE</span>
+              <h4>Your recommendation, explained <em>PLAIN-LANGUAGE SUMMARY</em></h4>
+              <span class="tag eco" style="font-size:11px;padding:3px 8px" id="engine-tag">EXPLANATION</span>
             </div>
             <div class="panel-b">
               <p id="ai-explanation-text" style="font-size:14.5px;line-height:1.65;color:var(--ink-2)">
-                Local model ranking details will appear here after running a recommendation.
+                A simple explanation of your top suggestion will appear here.
               </p>
             </div>
           </div>
@@ -368,7 +389,7 @@
               <div class="flex between" style="flex-wrap:wrap;gap:12px;align-items:center">
                 <div>
                   <b style="font-size:15px;color:var(--moss-d)">Food-Waste Reduction &amp; Optimization Insight</b>
-                  <p class="muted" id="insight-banner-text" style="margin-top:2px">Target shelf-life is projected to be met with zero post-harvest moisture degradation.</p>
+                  <p class="muted" id="insight-banner-text" style="margin-top:2px">Your estimated freshness time will appear here.</p>
                 </div>
                 <span class="tag eco" style="font-size:12px;padding:4px 10px" id="insight-tag">FOOD LOSS PREVENTED</span>
               </div>
@@ -376,42 +397,42 @@
           </div>
 
           <div class="tabs" id="result-tabs">
-            <button class="tab on" data-tab="picks">Mill picks</button>
-            <button class="tab" data-tab="barrier">Barrier &amp; structure</button>
-            <button class="tab" data-tab="map">MAP gases</button>
+            <button class="tab on" data-tab="picks">Suggested packs</button>
+            <button class="tab" data-tab="barrier">Pack protection</button>
+            <button class="tab" data-tab="map">Protective gas mix</button>
             <button class="tab" data-tab="shelf">Shelf life</button>
             <button class="tab" data-tab="cost">Cost</button>
             <button class="tab" data-tab="eco">Sustainability</button>
-            <button class="tab" data-tab="store">Store &amp; transit</button>
-            <button class="tab" data-tab="qr">QR trace</button>
+            <button class="tab" data-tab="store">Storage &amp; travel</button>
+            <button class="tab" data-tab="qr">Batch code</button>
           </div>
 
           <div class="tab-panel on" id="tab-picks">
             <div class="panel">
-              <div class="panel-h"><h4>Why this window <em>CLASS MATCH</em></h4></div>
+              <div class="panel-h"><h4>Product needs at a glance <em>YOUR DETAILS</em></h4></div>
               <div class="panel-b"><div class="spec-grid" id="why-grid"></div></div>
             </div>
             <div class="recs" id="rec-grid"></div>
             <div class="panel" style="margin-top:16px">
-              <div class="panel-h"><h4>Sustainable alternatives <em>ECO OPTIONS</em></h4></div>
+              <div class="panel-h"><h4>Greener options <em>RECYCLABLE · COMPOSTABLE</em></h4></div>
               <div class="panel-b" id="eco-alts"></div>
             </div>
           </div>
 
           <div class="tab-panel" id="tab-barrier">
             <div class="panel">
-              <div class="panel-h"><h4>Required permeability <em>ASTM / ISO STANDARDS</em></h4></div>
+              <div class="panel-h"><h4>How much air and moisture can pass <em>PACK PROTECTION</em></h4></div>
               <div class="panel-b"><div class="spec-grid" id="specs-grid"></div></div>
             </div>
             <div class="panel">
-              <div class="panel-h"><h4>Pack structure <em>TOP PICK BREAKDOWN</em></h4></div>
+              <div class="panel-h"><h4>Suggested pack layers <em>TOP SUGGESTION</em></h4></div>
               <div class="panel-b" id="structure-box"></div>
             </div>
           </div>
 
           <div class="tab-panel" id="tab-map">
             <div class="panel">
-              <div class="panel-h"><h4>Headspace gas formulation <em>MAP RECIPE</em></h4></div>
+              <div class="panel-h"><h4>Protective gas mix inside the pack <em>GAS MIX</em></h4></div>
               <div class="panel-b">
                 <div class="map-box">
                   <svg id="map-svg" width="180" height="180" viewBox="0 0 180 180"></svg>
@@ -426,7 +447,7 @@
 
           <div class="tab-panel" id="tab-shelf">
             <div class="panel">
-              <div class="panel-h"><h4>Predicted shelf-life days <em>PRESERVATION MODEL</em></h4></div>
+              <div class="panel-h"><h4>Estimated freshness time <em>IN DAYS</em></h4></div>
               <div class="panel-b">
                 <div class="shelf" id="shelf-box"></div>
                 <p class="muted" id="shelf-note" style="margin-top:12px"></p>
@@ -436,28 +457,28 @@
 
           <div class="tab-panel" id="tab-cost">
             <div class="panel">
-              <div class="panel-h"><h4>Indicative film cost <em>INR COMPARISON</em></h4></div>
+              <div class="panel-h"><h4>Estimated packaging cost <em>COMPARE OPTIONS</em></h4></div>
               <div class="panel-b" id="cost-box"></div>
             </div>
           </div>
 
           <div class="tab-panel" id="tab-eco">
             <div class="panel">
-              <div class="panel-h"><h4>Circular score <em>CIRCULARITY INDEX</em></h4></div>
+              <div class="panel-h"><h4>Environmental score <em>PACKAGING IMPACT</em></h4></div>
               <div class="panel-b" id="eco-box"></div>
             </div>
           </div>
 
           <div class="tab-panel" id="tab-store">
             <div class="panel">
-              <div class="panel-h"><h4>Handling &amp; Storage Specification Sheet</h4></div>
+              <div class="panel-h"><h4>Storage and shipping tips</h4></div>
               <div class="panel-b" id="store-box"></div>
             </div>
           </div>
 
           <div class="tab-panel" id="tab-qr">
             <div class="panel">
-              <div class="panel-h"><h4>Lot identity &amp; Traceability <em>DIGITAL TRACE</em></h4></div>
+              <div class="panel-h"><h4>Batch details <em>SCAN OR SAVE CODE</em></h4></div>
               <div class="panel-b">
                 <div class="qr-row">
                   <div>
@@ -476,23 +497,23 @@
       <section class="page" id="page-history">
         <div class="panel">
           <div class="panel-h">
-            <h4>Saved Recommendation History <em>RECORD LOG</em></h4>
-            <input class="inp" id="hist-search" placeholder="Search saved dossiers…" style="width:240px" />
+            <h4>Saved recommendations <em>YOUR HISTORY</em></h4>
+            <input class="inp" id="hist-search" placeholder="Search saved reports…" style="width:240px" />
           </div>
           <div class="panel-b">
-            <p class="muted mb">View, reload, or select multiple dossiers to run side-by-side historical comparison.</p>
+            <p class="muted mb">Open an earlier recommendation or select a few to compare them side by side.</p>
             <div class="table-wrap">
               <table class="data">
                 <thead>
                   <tr>
-                    <th>Select</th><th>Pack ID</th><th>Commodity</th><th>Material Selected</th><th>Storage</th><th>Timestamp</th><th>Action</th>
+                    <th>Select</th><th>Batch code</th><th>Product</th><th>Suggested material</th><th>Storage</th><th>Date</th><th>Action</th>
                   </tr>
                 </thead>
                 <tbody id="history-full-tbody"></tbody>
               </table>
             </div>
             <div class="flex end gap" style="margin-top:14px">
-              <button class="btn btn-terra" id="btn-compare-selected-hist">Compare Selected Past Recommendations</button>
+              <button class="btn btn-terra" id="btn-compare-selected-hist">Compare selected</button>
             </div>
           </div>
         </div>
@@ -502,12 +523,12 @@
       <section class="page" id="page-history_compare">
         <div class="panel">
           <div class="panel-h">
-            <h4>Historical Recommendation Comparison <em>PAST DOSSIERS ANALYSIS</em></h4>
+            <h4>Compare saved recommendations <em>SIDE BY SIDE</em></h4>
           </div>
           <div class="panel-b">
-            <p class="muted mb">Side-by-side evaluation of previously generated packaging specifications.</p>
+            <p class="muted mb">See how your earlier packaging choices and results differ.</p>
             <div id="hist-cmp-container">
-              <p class="muted">No past dossiers selected. Go to <a href="#" data-go="history" style="color:var(--terra);text-decoration:underline">Recommendation History</a> and select dossiers to compare.</p>
+              <p class="muted">Choose at least two saved recommendations from <a href="#" data-go="history" style="color:var(--terra);text-decoration:underline">your history</a> to compare them.</p>
             </div>
           </div>
         </div>
@@ -517,10 +538,10 @@
       <section class="page" id="page-compare">
         <div class="panel">
           <div class="panel-h">
-            <h4>Material Comparison Matrix <em>SIDE-BY-SIDE ANALYZER</em></h4>
+            <h4>Compare packaging materials <em>SIDE BY SIDE</em></h4>
           </div>
           <div class="panel-b">
-            <p class="muted mb">Select up to 3 packaging materials to compare technical properties, barrier ranges, cost, and eco performance.</p>
+            <p class="muted mb">Compare up to three materials by protection, thickness, cost, and environmental impact.</p>
             <div class="fields three mb">
               <div class="fg">
                 <label>Material 1</label>
@@ -554,7 +575,7 @@
         <div class="grid-2">
           <div>
             <div class="panel">
-              <div class="panel-h"><h4>Pack Dimensions &amp; Film Calculator <em>BATCH ECONOMICS</em></h4></div>
+              <div class="panel-h"><h4>Packaging size and cost calculator <em>PLAN A BATCH</em></h4></div>
               <div class="panel-b">
                 <div class="fg">
                   <label>Pouch format</label>
@@ -578,7 +599,7 @@
                     <div class="unit"><input class="inp" type="number" id="calc-depth" value="4" min="0" max="30" /><i>cm</i></div>
                   </div>
                   <div class="fg">
-                    <label>Film gauge</label>
+                    <label>Film thickness</label>
                     <div class="unit"><input class="inp" type="number" id="calc-gauge" value="40" min="10" max="300" /><i>µm</i></div>
                   </div>
                   <div class="fg">
@@ -586,20 +607,20 @@
                     <div class="unit"><input class="inp" type="number" id="calc-pack-weight" value="500" min="10" /><i>g</i></div>
                   </div>
                   <div class="fg">
-                    <label>Total lot batch size</label>
+                    <label>Total batch size</label>
                     <div class="unit"><input class="inp" type="number" id="calc-batch-qty" value="1000" min="1" /><i>kg</i></div>
                   </div>
                 </div>
-                <button class="btn btn-terra btn-lg" id="btn-run-calc" style="margin-top:12px">Calculate Film Requirements</button>
+                <button class="btn btn-terra btn-lg" id="btn-run-calc" style="margin-top:12px">Calculate packaging needed</button>
               </div>
             </div>
           </div>
 
           <div>
             <div class="panel">
-              <div class="panel-h"><h4>Output Summary <em>CALCULATED METRICS</em></h4></div>
+              <div class="panel-h"><h4>Your estimate <em>RESULTS</em></h4></div>
               <div class="panel-b" id="calc-output-box">
-                <p class="muted">Enter parameters and click Calculate to compute film area, pouch count, film weight, and batch costs.</p>
+                <p class="muted">Enter your pack size and batch amount to estimate film area, number of packs, film weight, and cost.</p>
               </div>
             </div>
           </div>
@@ -609,12 +630,12 @@
       <!-- LOT VERIFIER TOOL -->
       <section class="page" id="page-verifier">
         <div class="panel">
-          <div class="panel-h"><h4>Lot Identity &amp; Spec Verifier <em>AUTHENTICITY LOOKUP</em></h4></div>
+          <div class="panel-h"><h4>Check a batch code <em>LOOK UP A SAVED PLAN</em></h4></div>
           <div class="panel-b">
-            <p class="muted mb">Enter any Smart Pack AI Pack ID (e.g., <code>SPA-8A7F421B</code>) or paste QR code raw string to verify the lot dossier.</p>
+            <p class="muted mb">Enter a Smart Pack batch code (for example, <code>SPA-8A7F421B</code>) or paste the text from its QR code.</p>
             <div class="flex gap mb" style="max-width:560px">
               <input class="inp" id="inp-verify-id" placeholder="SPA-XXXXXXXX or SMARTPACK|..." />
-              <button class="btn btn-terra" id="btn-do-verify">Verify Lot</button>
+              <button class="btn btn-terra" id="btn-do-verify">Find batch details</button>
             </div>
 
             <div id="verify-result-box" style="display:none">
@@ -627,12 +648,12 @@
                   <div class="panel-b" id="verify-kv-body"></div>
                 </div>
                 <div class="panel" style="margin-bottom:0">
-                  <div class="panel-h"><h4>Integrity Checklist</h4></div>
+                  <div class="panel-h"><h4>Batch checks</h4></div>
                   <div class="panel-b">
-                    <div class="profile-row"><span>Cryptographic Hash</span><b class="mono" id="v-hash">Valid SHA-256</b></div>
-                    <div class="profile-row"><span>Barrier Target Met</span><b id="v-target">Verified Yes</b></div>
-                    <div class="profile-row"><span>Issuance Protocol</span><b>Smart Pack Engine 2.0</b></div>
-                    <div class="profile-row"><span>Security Status</span><b style="color:var(--moss)">AUTHENTIC</b></div>
+                    <div class="profile-row"><span>Record code</span><b class="mono" id="v-hash">Valid</b></div>
+                    <div class="profile-row"><span>Pack requirements</span><b id="v-target">Checked</b></div>
+                    <div class="profile-row"><span>Created with</span><b>Smart Pack AI</b></div>
+                    <div class="profile-row"><span>Record status</span><b style="color:var(--moss)">MATCHED</b></div>
                   </div>
                 </div>
               </div>
@@ -645,18 +666,18 @@
       <section class="page" id="page-materials">
         <div class="panel">
           <div class="panel-h">
-            <h4>Packaging Materials Database <em>MILL CATALOG &amp; ADMIN PANEL</em></h4>
+            <h4>Packaging materials <em>BROWSE AND EDIT</em></h4>
             <div class="flex gap">
-              <button class="btn btn-terra" id="btn-open-add-mat" style="font-size:12px;padding:6px 12px">+ Add New Material (Admin)</button>
-              <input class="inp" id="mat-search" placeholder="Search mill stock…" style="width:200px" />
+              <button class="btn btn-terra" id="btn-open-add-mat" style="font-size:12px;padding:6px 12px">+ Add material</button>
+              <input class="inp" id="mat-search" placeholder="Search packaging materials…" style="width:200px" />
             </div>
           </div>
           <div class="table-wrap">
             <table class="data">
               <thead>
                 <tr>
-                  <th>Material</th><th>Class</th><th>OTR</th><th>WVTR</th><th>CO₂TR</th>
-                  <th>µm</th><th>MAP</th><th>Seal</th><th>Bio</th><th>Recycle</th><th>Cost</th><th>Admin Action</th>
+                  <th>Material</th><th>Type</th><th title="How easily oxygen passes through">Air protection</th><th title="How easily water vapor passes through">Moisture protection</th><th title="How easily carbon dioxide passes through">CO₂ flow</th>
+                  <th title="Micrometers">Thickness</th><th>Gas fill</th><th>Heat seal</th><th>Compostable</th><th>Recyclable</th><th>Cost</th><th>Actions</th>
                 </tr>
               </thead>
               <tbody id="materials-tbody"></tbody>
@@ -669,9 +690,9 @@
       <section class="page" id="page-commodities">
         <div class="panel">
           <div class="panel-h">
-            <h4>Commodity &amp; Product Ledger <em>USDA / FAO ALIGNED</em></h4>
+            <h4>Product list <em>FOOD DETAILS</em></h4>
             <div class="flex gap">
-              <button class="btn btn-terra" id="btn-open-add-prod" style="font-size:12px;padding:6px 12px">+ Add New Food Product</button>
+              <button class="btn btn-terra" id="btn-open-add-prod" style="font-size:12px;padding:6px 12px">+ Add a product</button>
               <input class="inp" id="com-search" placeholder="Search commodities…" style="width:200px" />
             </div>
           </div>
@@ -679,8 +700,8 @@
             <table class="data">
               <thead>
                 <tr>
-                  <th>Commodity</th><th>Category</th><th>Moisture</th><th>Fat</th><th>pH</th>
-                  <th>Respiration</th><th>Store</th><th>Temp</th><th>RH</th>
+                  <th>Product</th><th>Type</th><th>Water</th><th>Fat</th><th>Acidity</th>
+                  <th>Uses oxygen</th><th>Storage</th><th>Temperature</th><th>Air moisture</th>
                 </tr>
               </thead>
               <tbody id="commodities-tbody"></tbody>
@@ -694,32 +715,32 @@
         <div class="grid-2">
           <div>
             <div class="panel">
-              <div class="panel-h"><h4>Smart Pack AI System Architecture</h4></div>
+              <div class="panel-h"><h4>How Smart Pack helps</h4></div>
               <div class="panel-b" style="line-height:1.65;font-size:14.5px">
-                <p class="mb">Packaging holds food quality, safety, and shelf life through storage, transport, and distribution. Choosing inappropriate film stock permits moisture ingress, oxygen breakdown, or gas imbalances — triggering rapid spoilage, texture loss, and nutrient degradation.</p>
-                <p class="mb">Fresh agricultural commodities continue respiring after harvest. Consequently, Oxygen Transmission Rate (OTR), Water Vapor Transmission Rate (WVTR), and Carbon Dioxide Transmission Rate (CO₂TR) must be specified quantitatively according to crop physical metrics rather than arbitrary selection.</p>
-                <p>Smart Pack AI analyzes food physical parameters (moisture, fat, pH, respiration class) alongside distribution logistics (temperature, RH, transit vibration, lot size) to recommend ideal mill materials, gauge thickness, multilayer structures, MAP gas formulations, shelf-life estimates, cost projections, and QR lot traceability.</p>
+                <p class="mb">The right packaging helps protect food from air, moisture, and damage while it is stored and shipped.</p>
+                <p class="mb">Different foods need different kinds of protection. Fresh produce may need to breathe, while dry snacks need to stay away from air and dampness.</p>
+                <p>Enter a product and its storage and travel details to see suitable packaging, pack layers, a protective gas mix when useful, freshness and cost estimates, greener options, and a code for the saved plan.</p>
               </div>
             </div>
             <div class="panel">
-              <div class="panel-h"><h4>Methodology &amp; Mathematical Engine</h4></div>
+              <div class="panel-h"><h4>What goes into a suggestion?</h4></div>
               <div class="panel-b">
-                <p class="muted">Data sources: USDA FoodData Central · FAO Post-Harvest Handbooks · ASTM F1383 · ISO 15105-1 · Robertson (2013) Food Packaging Principles · Farber &amp; Dodds MAP Formulations.</p>
-                <p style="margin-top:10px;font-size:14px"><b>Hybrid AI Engine:</b> A scikit-learn TF-IDF model ranks materials locally using product details, material descriptions, barrier similarity, and packaging constraints. When a Gemini API key is configured, Gemini explains the top-ranked option in everyday language, including why it fits, a trade-off, and any assumptions. Local recommendations still work if Gemini is unavailable.</p>
+                <p class="muted">Suggestions take into account the food, storage temperature, shipping method, batch size, budget, and material details in the catalogue.</p>
+                <p style="margin-top:10px;font-size:14px">The results include the best matches, why they may suit your product, expected freshness, cost, storage tips, and possible trade-offs. Estimates can help you plan; confirm important packaging choices with a real pack test.</p>
               </div>
             </div>
           </div>
           <div>
             <div class="panel">
-              <div class="panel-h"><h4>ASTM &amp; ISO Testing Standards</h4></div>
+              <div class="panel-h"><h4>How packaging is tested</h4></div>
               <div class="panel-b">
-                <div class="profile-row"><span>ASTM F1383</span><b>Gas Permeability</b></div>
-                <div class="profile-row"><span>ISO 15105-1</span><b>Differential Pressure</b></div>
-                <div class="profile-row"><span>ASTM F1249</span><b>Water Vapor (WVTR)</b></div>
-                <div class="profile-row"><span>ASTM F1927</span><b>Oxygen (OTR) Coulometric</b></div>
-                <div class="profile-row"><span>ASTM D882</span><b>Tensile Properties</b></div>
-                <div class="profile-row"><span>ASTM D1922</span><b>Tear Resistance</b></div>
-                <p class="muted" style="margin-top:12px">All mill material specifications adhere to standardized international test protocols.</p>
+                <div class="profile-row"><span>ASTM F1383</span><b>How gases pass through</b></div>
+                <div class="profile-row"><span>ISO 15105-1</span><b>Air passing through a film</b></div>
+                <div class="profile-row"><span>ASTM F1249</span><b>Moisture passing through</b></div>
+                <div class="profile-row"><span>ASTM F1927</span><b>Oxygen passing through</b></div>
+                <div class="profile-row"><span>ASTM D882</span><b>Stretch and strength</b></div>
+                <div class="profile-row"><span>ASTM D1922</span><b>Resistance to tearing</b></div>
+                <p class="muted" style="margin-top:12px">These are common tests used to compare packaging materials.</p>
               </div>
             </div>
           </div>
@@ -733,26 +754,26 @@
 <div class="overlay" id="modal-login">
   <div class="loader" style="width:min(480px, 94vw);padding:24px">
     <div class="flex between" style="align-items:center;margin-bottom:12px">
-      <div class="kicker">Enterprise Auth</div>
+      <div class="kicker">Company settings</div>
       <button class="btn btn-ghost" id="login-close" style="padding:4px 10px;font-size:16px">✕</button>
     </div>
-    <h3 style="font-size:22px">Switch Company Workspace</h3>
-    <p class="muted mb">Select or register an enterprise workspace to manage product profiles, saved packaging recommendations, and analytics.</p>
+    <h3 style="font-size:22px">Choose a company</h3>
+    <p class="muted mb">Keep product details and saved recommendations grouped by company.</p>
     
     <div class="fg">
-      <label>Select Company Profile</label>
+      <label>Company</label>
       <select class="inp" id="select-company-profile">
         <option value="GreenField Packhouses Ltd.">GreenField Packhouses Ltd. (Default)</option>
         <option value="AgriFresh International">AgriFresh International</option>
         <option value="SunGold Organic Foods">SunGold Organic Foods</option>
-        <option value="custom">+ Register New Enterprise Workspace</option>
+        <option value="custom">+ Add a company</option>
       </select>
     </div>
     <div class="fg" id="fg-custom-company" style="display:none">
       <label>New Company Name</label>
       <input class="inp" id="inp-custom-company" placeholder="e.g. Apex Cold Chain Operations" />
     </div>
-    <button class="btn btn-terra btn-lg" id="btn-do-login" style="margin-top:12px">Activate Workspace Session</button>
+    <button class="btn btn-terra btn-lg" id="btn-do-login" style="margin-top:12px">Save company choice</button>
   </div>
 </div>
 
@@ -760,11 +781,11 @@
 <div class="overlay" id="modal-add-product">
   <div class="loader" style="width:min(580px, 94vw);padding:24px">
     <div class="flex between" style="align-items:center;margin-bottom:12px">
-      <div class="kicker">Product Management</div>
+      <div class="kicker">Product details</div>
       <button class="btn btn-ghost" id="add-prod-close" style="padding:4px 10px;font-size:16px">✕</button>
     </div>
-    <h3 style="font-size:22px">Add New Food Product Profile</h3>
-    <p class="muted mb">Save custom agricultural produce or processed food items to your commodity ledger.</p>
+    <h3 style="font-size:22px">Add a product</h3>
+    <p class="muted mb">Save your product details so you can use them in future recommendations.</p>
     
     <div class="fields">
       <div class="fg"><label>Product Name <span class="req">*</span></label><input class="inp" id="np-name" placeholder="e.g. Dragonfruit (Red)" /></div>
@@ -784,19 +805,19 @@
       <div class="fg"><label>Fat (%)</label><input class="inp" type="number" id="np-fat" value="0.5" step="0.1" /></div>
       <div class="fg"><label>pH</label><input class="inp" type="number" id="np-ph" value="5.5" step="0.1" /></div>
       <div class="fg">
-        <label>Respiration Rate</label>
+        <label>How quickly it uses oxygen</label>
         <select class="inp" id="np-respiration">
           <option value="Low">Low</option>
           <option value="Moderate" selected>Moderate</option>
           <option value="High">High</option>
           <option value="Very High">Very High</option>
-          <option value="NA">NA (Non-respiring)</option>
+          <option value="NA">Not needed (does not use oxygen)</option>
         </select>
       </div>
-      <div class="fg"><label>Optimal Temp (°C)</label><input class="inp" type="number" id="np-temp" value="10" /></div>
-      <div class="fg"><label>Optimal RH (%)</label><input class="inp" type="number" id="np-rh" value="90" /></div>
+      <div class="fg"><label>Best storage temperature (°C)</label><input class="inp" type="number" id="np-temp" value="10" /></div>
+      <div class="fg"><label>Best air moisture (%)</label><input class="inp" type="number" id="np-rh" value="90" /></div>
     </div>
-    <button class="btn btn-terra btn-lg" id="btn-save-product" style="margin-top:12px">Save Product Profile to Ledger</button>
+    <button class="btn btn-terra btn-lg" id="btn-save-product" style="margin-top:12px">Save product</button>
   </div>
 </div>
 
@@ -804,35 +825,35 @@
 <div class="overlay" id="modal-admin-material">
   <div class="loader" style="width:min(640px, 94vw);padding:24px">
     <div class="flex between" style="align-items:center;margin-bottom:12px">
-      <div class="kicker">Admin Panel</div>
+      <div class="kicker">Material settings</div>
       <button class="btn btn-ghost" id="admin-mat-close" style="padding:4px 10px;font-size:16px">✕</button>
     </div>
     <h3 id="admin-mat-modal-title" style="font-size:22px">Add / Edit Packaging Material</h3>
-    <p class="muted mb">Update mill specifications or register new packaging stock in the database.</p>
+    <p class="muted mb">Add a packaging option or update its details.</p>
     
     <input type="hidden" id="admin-mat-id" value="" />
     <div class="fields">
       <div class="fg"><label>Material Name <span class="req">*</span></label><input class="inp" id="am-name" placeholder="e.g. EVOH Coex Barrier Film" /></div>
       <div class="fg"><label>Short Code</label><input class="inp" id="am-short" placeholder="e.g. EVOH-Coex" /></div>
-      <div class="fg span2"><label>Category Class</label><input class="inp" id="am-cat" placeholder="e.g. High Barrier Laminates" /></div>
+      <div class="fg span2"><label>Material type</label><input class="inp" id="am-cat" placeholder="e.g. Strong protective films" /></div>
       
-      <div class="fg"><label>OTR Min (cc/m²/day)</label><input class="inp" type="number" id="am-otr-min" value="1" /></div>
-      <div class="fg"><label>OTR Max (cc/m²/day)</label><input class="inp" type="number" id="am-otr-max" value="15" /></div>
-      <div class="fg"><label>WVTR Min (g/m²/day)</label><input class="inp" type="number" id="am-wvtr-min" value="0.2" /></div>
-      <div class="fg"><label>WVTR Max (g/m²/day)</label><input class="inp" type="number" id="am-wvtr-max" value="1.5" /></div>
-      <div class="fg"><label>Thickness Min (µm)</label><input class="inp" type="number" id="am-thick-min" value="25" /></div>
-      <div class="fg"><label>Thickness Max (µm)</label><input class="inp" type="number" id="am-thick-max" value="80" /></div>
+      <div class="fg"><label>Air protection — lowest (OTR, cc/m²/day)</label><input class="inp" type="number" id="am-otr-min" value="1" /></div>
+      <div class="fg"><label>Air protection — highest (OTR, cc/m²/day)</label><input class="inp" type="number" id="am-otr-max" value="15" /></div>
+      <div class="fg"><label>Moisture protection — lowest (WVTR, g/m²/day)</label><input class="inp" type="number" id="am-wvtr-min" value="0.2" /></div>
+      <div class="fg"><label>Moisture protection — highest (WVTR, g/m²/day)</label><input class="inp" type="number" id="am-wvtr-max" value="1.5" /></div>
+      <div class="fg"><label>Thickness — thinnest (µm)</label><input class="inp" type="number" id="am-thick-min" value="25" /></div>
+      <div class="fg"><label>Thickness — thickest (µm)</label><input class="inp" type="number" id="am-thick-max" value="80" /></div>
       
       <div class="fg">
-        <label>MAP Compatible</label>
+        <label>Can use protective gas mix</label>
         <select class="inp" id="am-map"><option value="Yes">Yes</option><option value="No">No</option></select>
       </div>
       <div class="fg">
-        <label>Heat Sealable</label>
+        <label>Can be closed with heat</label>
         <select class="inp" id="am-seal"><option value="Yes">Yes</option><option value="No">No</option></select>
       </div>
       <div class="fg">
-        <label>Biodegradable</label>
+        <label>Compostable</label>
         <select class="inp" id="am-bio"><option value="Yes">Yes</option><option value="No">No</option></select>
       </div>
       <div class="fg">
@@ -840,11 +861,11 @@
         <select class="inp" id="am-recycle"><option value="Yes">Yes</option><option value="No">No</option></select>
       </div>
       <div class="fg span2">
-        <label>Cost Tier</label>
+        <label>Cost</label>
         <select class="inp" id="am-cost"><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select>
       </div>
     </div>
-    <button class="btn btn-terra btn-lg" id="btn-save-admin-material" style="margin-top:12px">Save Material to Database</button>
+    <button class="btn btn-terra btn-lg" id="btn-save-admin-material" style="margin-top:12px">Save material</button>
   </div>
 </div>
 
@@ -852,7 +873,7 @@
 <div class="overlay" id="modal-material">
   <div class="loader" style="width:min(560px, 94vw);padding:24px">
     <div class="flex between" style="align-items:center;margin-bottom:12px">
-      <div class="kicker" id="md-cat">Synthetic Polymer</div>
+    <div class="kicker" id="md-cat">Material type</div>
       <button class="btn btn-ghost" id="md-close" style="padding:4px 10px;font-size:16px">✕</button>
     </div>
     <h3 id="md-title" style="font-size:22px">Material Name</h3>
@@ -860,33 +881,33 @@
     <p id="md-desc" class="muted" style="margin-bottom:16px;line-height:1.5"></p>
     
     <div class="specs-mini mb" style="grid-template-columns:1fr 1fr 1fr">
-      <div><b>OTR Range</b><span id="md-otr">—</span></div>
-      <div><b>WVTR Range</b><span id="md-wvtr">—</span></div>
-      <div><b>CO₂TR Range</b><span id="md-co2">—</span></div>
+      <div><b>Air passing through (OTR)</b><span id="md-otr">—</span></div>
+      <div><b>Moisture passing through (WVTR)</b><span id="md-wvtr">—</span></div>
+      <div><b>CO₂ passing through (CO₂TR)</b><span id="md-co2">—</span></div>
       <div><b>Thickness</b><span id="md-thick">—</span></div>
-      <div><b>Cost Tier</b><span id="md-cost">—</span></div>
-      <div><b>MAP Compatible</b><span id="md-map">—</span></div>
+      <div><b>Cost range</b><span id="md-cost">—</span></div>
+      <div><b>Works with gas filling</b><span id="md-map">—</span></div>
     </div>
     
-    <div class="profile-row"><span>Heat Sealable</span><b id="md-seal">—</b></div>
-    <div class="profile-row"><span>Biodegradable</span><b id="md-bio">—</b></div>
+    <div class="profile-row"><span>Can be closed with heat</span><b id="md-seal">—</b></div>
+    <div class="profile-row"><span>Compostable</span><b id="md-bio">—</b></div>
     <div class="profile-row"><span>Recyclable</span><b id="md-recycle">—</b></div>
-    <div class="profile-row"><span>Best Applications</span><b id="md-best">—</b></div>
-    <div class="profile-row"><span>Avoid For</span><b id="md-avoid">—</b></div>
+    <div class="profile-row"><span>Works well for</span><b id="md-best">—</b></div>
+    <div class="profile-row"><span>May not suit</span><b id="md-avoid">—</b></div>
   </div>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="loader">
-    <div class="kicker">AI Engine</div>
-    <h3>Local model is ranking materials…</h3>
-    <p class="muted">Material matching, barrier fit, MAP, cost and trace</p>
+    <div class="kicker">Preparing your plan</div>
+    <h3>Finding a good pack for your product…</h3>
+    <p class="muted">Checking your product, travel, storage, and cost preferences</p>
     <div class="ls" id="load-steps">
-      <div id="ls1">Loading commodity data</div>
+      <div id="ls1">Looking up product details</div>
       <div id="ls2">Comparing product and material descriptions</div>
-      <div id="ls3">Ranking material matches locally</div>
-      <div id="ls4">Calculating MAP · shelf life · cost</div>
-      <div id="ls5">Building dossier + QR</div>
+      <div id="ls3">Finding packs that suit your product</div>
+      <div id="ls4">Estimating freshness and cost</div>
+      <div id="ls5">Preparing your plan and batch code</div>
     </div>
   </div>
 </div>
