@@ -4,5 +4,6 @@ pandas
 numpy
 scikit-learn
 joblib
-python-dotenv
 gunicorn
+google-generativeai
+python-dotenv

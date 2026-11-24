@@ -57,8 +57,8 @@
     <div class="rail-foot">
       <div class="stamp">
         <b>Smart Pack AI</b>
-        <strong>v2.0 Enterprise</strong>
-        <span class="muted">Data-Driven Packhouse Platform</span>
+        <strong>v3.0 AI Engine</strong>
+        <span class="muted">Local ML + Gemini Packhouse Platform</span>
       </div>
     </div>
   </aside>
@@ -169,7 +169,7 @@
               <article class="feature-card">
                 <div class="icon-tag">02</div>
                 <h5>Automated Engineering</h5>
-                <p>Data-driven multilayer structures and MAP gas formulations generated instantly without needing an on-site testing laboratory.</p>
+                <p>Local material matching ranks packaging options against product needs, then the packaging engine calculates MAP and storage guidance.</p>
               </article>
               <article class="feature-card">
                 <div class="icon-tag">03</div>
@@ -305,7 +305,7 @@
               </div>
             </div>
 
-            <button class="btn btn-terra btn-lg" id="btn-run">Run AI Recommendation Engine &amp; Write Dossier</button>
+            <button class="btn btn-terra btn-lg" id="btn-run">🤖 Run ML + Gemini Recommendation</button>
           </div>
 
           <aside>
@@ -346,6 +346,19 @@
               <button class="btn btn-ghost" id="btn-export-json">Export JSON Report</button>
               <button class="btn btn-ghost" onclick="window.print()">Print Spec Sheet</button>
               <button class="btn btn-terra" data-go="recommend">New Spec</button>
+            </div>
+          </div>
+
+          <!-- AI EXPLANATION BANNER -->
+          <div class="panel mb" id="ai-explanation-panel" style="background:linear-gradient(135deg, #dce6d4 0%, #d5e4e8 100%);border-color:#b7c9b0">
+            <div class="panel-h" style="background:rgba(61,90,60,0.12)">
+              <h4>🤖 What the Model Recommends and Why <em>LOCAL ML + GEMINI EXPLANATION</em></h4>
+              <span class="tag eco" style="font-size:11px;padding:3px 8px" id="engine-tag">AI ENGINE</span>
+            </div>
+            <div class="panel-b">
+              <p id="ai-explanation-text" style="font-size:14.5px;line-height:1.65;color:var(--ink-2)">
+                Local model ranking details will appear here after running a recommendation.
+              </p>
             </div>
           </div>
 
@@ -692,7 +705,7 @@
               <div class="panel-h"><h4>Methodology &amp; Mathematical Engine</h4></div>
               <div class="panel-b">
                 <p class="muted">Data sources: USDA FoodData Central · FAO Post-Harvest Handbooks · ASTM F1383 · ISO 15105-1 · Robertson (2013) Food Packaging Principles · Farber &amp; Dodds MAP Formulations.</p>
-                <p style="margin-top:10px;font-size:14px">Rule-based physical windows for OTR / WVTR / CO₂TR are blended with cosine similarity over log-barrier property vectors (using scikit-learn on the server, mirrored client-side for offline execution).</p>
+                <p style="margin-top:10px;font-size:14px"><b>Hybrid AI Engine:</b> A scikit-learn TF-IDF model ranks materials locally using product details, material descriptions, barrier similarity, and packaging constraints. When a Gemini API key is configured, Gemini explains the top-ranked option in everyday language, including why it fits, a trade-off, and any assumptions. Local recommendations still work if Gemini is unavailable.</p>
               </div>
             </div>
           </div>
@@ -865,15 +878,15 @@
 
 <div class="overlay" id="overlay">
   <div class="loader">
-    <div class="kicker">Mill</div>
-    <h3>Reading the lot…</h3>
-    <p class="muted">Barrier window, MAP, cost and trace</p>
+    <div class="kicker">AI Engine</div>
+    <h3>Local model is ranking materials…</h3>
+    <p class="muted">Material matching, barrier fit, MAP, cost and trace</p>
     <div class="ls" id="load-steps">
-      <div id="ls1">Commodity profile</div>
-      <div id="ls2">OTR · WVTR · CO₂TR</div>
-      <div id="ls3">Scoring mill stock</div>
-      <div id="ls4">MAP · shelf · cost</div>
-      <div id="ls5">QR lot mark</div>
+      <div id="ls1">Loading commodity data</div>
+      <div id="ls2">Comparing product and material descriptions</div>
+      <div id="ls3">Ranking material matches locally</div>
+      <div id="ls4">Calculating MAP · shelf life · cost</div>
+      <div id="ls5">Building dossier + QR</div>
     </div>
   </div>
 </div>

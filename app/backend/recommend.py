@@ -329,16 +329,17 @@ def score_material(material: dict, otr_req: tuple, wvtr_req: tuple, co2_req: tup
     return round(min(100.0, score), 2)
 
 
-def ml_similarity_scores(otr_req: tuple, wvtr_req: tuple) -> dict[int, float]:
-    """Cosine similarity of each material's barrier window to the required window."""
+def ml_similarity_scores(otr_req: tuple, wvtr_req: tuple, inputs: dict,
+                         commodity: Optional[dict]) -> dict[int, float]:
+    """Score materials with a local TF-IDF model plus barrier-property similarity."""
     try:
         from sklearn.metrics.pairwise import cosine_similarity
         from sklearn.preprocessing import StandardScaler
+        from sklearn.feature_extraction.text import TfidfVectorizer
     except Exception:
         return {}
 
-    rows = []
-    ids = []
+    ids, rows, positive_docs, avoid_docs = [], [], [], []
     for _, row in materials_df.iterrows():
         ids.append(int(row["id"]))
         rows.append([
@@ -347,6 +348,26 @@ def ml_similarity_scores(otr_req: tuple, wvtr_req: tuple) -> dict[int, float]:
             np.log10(_to_num(row["wvtr_min"], 0.01) + 0.01),
             np.log10(_to_num(row["wvtr_max"], 1) + 0.01),
         ])
+        positive_docs.append(" ".join(str(row.get(k, "") or "") for k in
+            ("name", "category", "best_for", "description", "color_barrier", "uv_barrier")))
+        avoid_docs.append(str(row.get("avoid_for", "") or ""))
+
+    commodity_text = ""
+    if commodity:
+        commodity_text = " ".join(str(commodity.get(k, "") or "") for k in
+            ("commodity", "category", "subcategory", "notes", "respiration_rate_class"))
+    query = " ".join((commodity_text, str(inputs.get("commodity", "")),
+        str(inputs.get("storage_type", "")), str(inputs.get("respiration_class", "")),
+        f"moisture {inputs.get('moisture', '')} fat {inputs.get('fat', '')} "
+        f"pH {inputs.get('ph', '')}",
+        "eco sustainable recyclable" if inputs.get("prefer_eco") else "",
+        "modified atmosphere packaging" if inputs.get("has_map_equipment") else ""))
+    vectorizer = TfidfVectorizer(stop_words="english", ngram_range=(1, 2))
+    vectors = vectorizer.fit_transform(positive_docs + avoid_docs + [query])
+    query_vec = vectors[-1]
+    positive_sim = cosine_similarity(vectors[:len(ids)], query_vec).ravel()
+    avoid_sim = cosine_similarity(vectors[len(ids):2 * len(ids)], query_vec).ravel()
+
     X = np.array(rows, dtype=float)
     target = np.array([[
         np.log10(otr_req[0] + 0.1),
@@ -356,10 +377,12 @@ def ml_similarity_scores(otr_req: tuple, wvtr_req: tuple) -> dict[int, float]:
     ]], dtype=float)
     scaler = StandardScaler()
     Xs = scaler.fit_transform(np.vstack([X, target]))
-    sims = cosine_similarity(Xs[:-1], Xs[-1:])
+    barrier_sims = cosine_similarity(Xs[:-1], Xs[-1:]).ravel()
     out = {}
     for i, mid in enumerate(ids):
-        out[mid] = float(max(0.0, sims[i][0]) * 100.0)
+        text_fit = max(0.0, float(positive_sim[i]) - 0.75 * float(avoid_sim[i]))
+        barrier_fit = max(0.0, float(barrier_sims[i]))
+        out[mid] = 100.0 * max(0.0, 0.7 * text_fit + 0.3 * barrier_fit)
     return out
 
 
@@ -676,14 +699,14 @@ def recommend(inputs: dict) -> dict:
         storage_type,
     )
 
-    ml_scores = ml_similarity_scores(otr_req, wvtr_req)
+    ml_scores = ml_similarity_scores(otr_req, wvtr_req, inputs, commodity)
 
     scored = []
     for _, row in materials_df.iterrows():
         mat = row.to_dict()
         rule = score_material(mat, otr_req, wvtr_req, co2_req, inputs, commodity, mech)
         ml = ml_scores.get(int(mat["id"]), rule)
-        blended = round(0.72 * rule + 0.28 * ml, 2)
+        blended = round(0.4 * rule + 0.6 * ml, 2)
         scored.append((blended, mat))
     scored.sort(key=lambda x: x[0], reverse=True)
 
@@ -758,7 +781,12 @@ def recommend(inputs: dict) -> dict:
 
     return {
         "success": True,
-        "engine": "hybrid-rule+cosine",
+        "engine": "local-tfidf-ml+constraints",
+        "ai_explanation": (
+            "A local scikit-learn TF-IDF model compared the product details with each material's "
+            "best-use, description, and avoid-use text, then combined that match with barrier-fit "
+            "and packaging constraints. No external AI service was called."
+        ),
         "commodity_info": commodity_display,
         "recommendations": recommendations,
         "eco_alternatives": eco_alts,

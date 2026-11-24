@@ -1,11 +1,16 @@
-"""
-Smart Pack AI — Flask Backend API
-"""
+"""Smart Pack AI — Flask API with local scikit-learn recommendations."""
 
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from recommend import recommend, list_commodities, list_materials, get_commodity_info
 import traceback
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+
+# Use the local scikit-learn recommender by default. It needs no API key or network.
+from recommend import recommend, list_commodities, list_materials, get_commodity_info
+ENGINE = "local-tfidf-ml+constraints"
 
 app = Flask(__name__)
 CORS(app)
@@ -29,10 +34,15 @@ def validate_float(val, name, min_val=None, max_val=None):
 
 @app.route("/api/health", methods=["GET"])
 def health():
+    gemini_key_set = bool(os.getenv("GEMINI_API_KEY"))
     return jsonify({
         "status": "ok",
         "service": "Smart Pack AI",
-        "version": "2.0.0",
+        "version": "3.0.0",
+        "engine": ENGINE,
+        "ai_enabled": True,
+        "model": "scikit-learn TF-IDF + cosine similarity",
+        "gemini_review_enabled": gemini_key_set,
     })
 
 
@@ -86,6 +96,13 @@ def api_recommend():
 
     try:
         result = recommend(inputs)
+        # The local model always creates the shortlist. Gemini optionally reviews it.
+        if os.getenv("GEMINI_API_KEY"):
+            try:
+                from ai_engine import review_local_recommendation
+                result = review_local_recommendation(result, inputs)
+            except Exception:
+                traceback.print_exc()
         return jsonify(result)
     except Exception:
         traceback.print_exc()

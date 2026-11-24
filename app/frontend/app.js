@@ -260,7 +260,7 @@ async function runRecommendation() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    }, 4000);
+    }, 15000);
     hideLoad();
     if (!data.success) { alert(data.error || "Engine error"); return; }
     finishResults(data, commodity);
@@ -282,7 +282,7 @@ function finishResults(data, commodity) {
 function showLoad() {
   $("overlay").classList.add("on");
   for (let i = 1; i <= 5; i++) $("ls" + i).className = "";
-  const delays = [0, 350, 700, 1050, 1400];
+  const delays = [0, 600, 2000, 4500, 7000];
   delays.forEach((t, i) => {
     setTimeout(() => {
       if (i) { $("ls" + i).className = "ok"; }
@@ -306,6 +306,7 @@ function renderResults(data, name) {
     $("insight-tag").textContent = `+${extPct}% SHELF LIFE EXTENSION`;
   }
 
+  renderAIExplanation(data);
   renderWhy(data);
   renderRecs(data.recommendations || []);
   renderEcoAlts(data.eco_alternatives || data.sustainability?.eco_alternatives || []);
@@ -317,6 +318,47 @@ function renderResults(data, name) {
   renderSustain(data.sustainability || {});
   renderStore(data.storage_guidelines || {});
   renderQR(data.traceability || {});
+}
+
+function renderAIExplanation(data) {
+  const panel = $("ai-explanation-panel");
+  const textEl = $("ai-explanation-text");
+  const tagEl = $("engine-tag");
+  if (!panel || !textEl) return;
+
+  const engine = data.engine || "unknown";
+  const geminiReview = data.gemini_review;
+  let explanation = data.ai_explanation || "";
+  if (geminiReview) {
+    explanation = [
+      geminiReview.recommendation && `What to choose: ${geminiReview.recommendation}`,
+      geminiReview.why_it_fits && `Why it fits: ${geminiReview.why_it_fits}`,
+      geminiReview.tradeoff && `Trade-off: ${geminiReview.tradeoff}`,
+      geminiReview.assumptions && `Assumptions: ${geminiReview.assumptions}`,
+    ].filter(Boolean).join("\n\n");
+  }
+
+  if (explanation) {
+    textEl.textContent = explanation;
+    panel.style.display = "block";
+  } else {
+    textEl.textContent = "AI explanation not available for this recommendation.";
+    panel.style.display = "block";
+  }
+
+  if (engine.includes("gemini")) {
+    tagEl.textContent = "GEMINI EXPLANATION + LOCAL ML";
+    tagEl.className = "tag eco";
+  } else if (engine.includes("local-tfidf")) {
+    tagEl.textContent = "LOCAL ML MODEL";
+    tagEl.className = "tag eco";
+  } else if (engine.includes("rule") || engine.includes("fallback")) {
+    tagEl.textContent = "RULE ENGINE";
+    tagEl.className = "tag";
+  } else {
+    tagEl.textContent = "AI ENGINE";
+    tagEl.className = "tag eco";
+  }
 }
 
 function renderWhy(data) {
@@ -360,6 +402,7 @@ function renderRecs(recs) {
         <div><b>CO₂TR</b><span>${rec.co2_range || "—"}</span></div>
         <div><b>Gauge</b><span>${um ? um + " µm" : rec.thickness_range}</span></div>
       </div>
+      ${rec.justification ? `<div class="callout info" style="margin-bottom:10px"><b>AI Justification:</b> ${rec.justification}</div>` : ""}
       <p class="muted" style="margin-bottom:10px">${rec.description || ""}</p>
       <div class="tags">${tags.join("")}</div>
     </article>`;
@@ -1028,6 +1071,8 @@ function clientRecommend(inp) {
   const packId = "SPA-" + Math.abs(hashCode(inp.commodity + (top3[0]?.short_name || ""))).toString(16).toUpperCase().slice(0, 8);
   return {
     success: true,
+    engine: "client-smart-pack",
+    ai_explanation: `Recommendation formulated for ${inp.commodity} under ${storage} conditions. Based on physical profile (${inp.moisture}% moisture, pH ${inp.ph}, respiration class: ${resp}), ${top3[0]?.name || "selected film"} is recommended to balance oxygen transmission and moisture retention while maximizing storage shelf life.`,
     commodity_info: detail || null,
     recommendations: top3,
     eco_alternatives: eco,
@@ -1104,6 +1149,7 @@ function fmtClient(m, mech, resp, inp) {
     },
     mechanical: mech,
     color_barrier: m.uv_barrier,
+    justification: `Offers optimal gas permeability (OTR: ${m.otr_min}–${m.otr_max}) and moisture protection suited for ${resp.toLowerCase()} respiration commodities.`,
   };
 }
 
