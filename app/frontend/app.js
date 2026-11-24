@@ -260,7 +260,8 @@ async function runRecommendation() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    }, 15000);
+    // Gemini can take longer on a cold request; give its explanation time to return.
+    }, 90000);
     hideLoad();
     if (!data.success) { alert(data.error || "Engine error"); return; }
     finishResults(data, commodity);

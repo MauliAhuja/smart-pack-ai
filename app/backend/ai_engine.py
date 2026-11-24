@@ -60,6 +60,7 @@ materials_df, commodities_df = load_data()
 # Gemini setup — lazy initialisation so the app starts even without a key
 # ---------------------------------------------------------------------------
 _MODEL = None
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.5-flash")
 
 
 def _get_model():
@@ -72,7 +73,7 @@ def _get_model():
             return None
         genai.configure(api_key=api_key)
         _MODEL = genai.GenerativeModel(
-            "gemini-1.5-flash",
+            GEMINI_MODEL,
             generation_config={
                 "temperature": 0.3,          # low temp → deterministic
                 "max_output_tokens": 4096,
@@ -609,7 +610,7 @@ def recommend(inputs: dict) -> dict:
 
     return {
         "success": True,
-        "engine": "gemini-1.5-flash-ai",
+        "engine": f"{GEMINI_MODEL}-ai",
         "ai_explanation": ai_result.get("ai_explanation", ""),
         "commodity_info": commodity_display,
         "recommendations": recs,
